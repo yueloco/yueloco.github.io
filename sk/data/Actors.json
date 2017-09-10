@@ -1,0 +1,5 @@
+[
+null,
+{"id":1,"battlerName":"","characterIndex":0,"characterName":"syu","classId":1,"equips":[0,0,0,0,0],"faceIndex":0,"faceName":"f","traits":[],"initialLevel":1,"maxLevel":99,"name":"イレブン","nickname":"","note":"","profile":""},
+{"id":2,"battlerName":"","characterIndex":1,"characterName":"syu","classId":2,"equips":[0,0,0,0,0],"faceIndex":1,"faceName":"f","traits":[],"initialLevel":1,"maxLevel":99,"name":"カミュ","nickname":"","note":"","profile":""}
+]

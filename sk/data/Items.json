@@ -1,0 +1,4 @@
+[
+null,
+{"id":1,"animationId":0,"consumable":false,"damage":{"critical":false,"elementId":0,"formula":"0","type":0,"variance":20},"description":"赤い宝石の付いたペンダント\n亡くなった父の形見かも・・？","effects":[],"hitType":0,"iconIndex":146,"itypeId":2,"name":"ペンダント","note":"","occasion":3,"price":0,"repeats":1,"scope":0,"speed":0,"successRate":100,"tpGain":0}
+]

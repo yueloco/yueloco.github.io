@@ -1,0 +1,15 @@
+[
+null,
+{"id":1,"atypeId":1,"description":"巡検士のために作られた軽くて丈夫な鎧","etypeId":2,"traits":[{"code":22,"dataId":1,"value":0}],"iconIndex":137,"name":"ロードプレート","note":"","params":[0,0,0,60,0,0,0,0],"price":0},
+{"id":2,"atypeId":1,"description":"魔法の効果を半減させる漆黒のマント","etypeId":3,"traits":[{"code":22,"dataId":1,"value":0},{"code":23,"dataId":7,"value":0.5}],"iconIndex":139,"name":"ブラックマント","note":"","params":[0,0,0,10,0,20,0,0],"price":0},
+{"id":3,"atypeId":1,"description":"魔力を上昇させる不思議な赤い指輪","etypeId":5,"traits":[{"code":22,"dataId":1,"value":0}],"iconIndex":145,"name":"レッドリング","note":"","params":[0,0,0,5,50,0,0,0],"price":0},
+{"id":4,"atypeId":1,"description":"アルザス魔法学院より贈られた大魔導師専用のローブ","etypeId":2,"traits":[{"code":22,"dataId":1,"value":0}],"iconIndex":154,"name":"ウィザードコート","note":"","params":[0,0,0,45,0,30,0,0],"price":0},
+{"id":5,"atypeId":1,"description":"髪の毛をたばねるリボン\nあくまでもファッションのために付けている","etypeId":3,"traits":[{"code":22,"dataId":1,"value":0}],"iconIndex":149,"name":"リボン","note":"","params":[0,0,0,2,0,0,0,0],"price":0},
+{"id":6,"atypeId":1,"description":"耳につける女性向けの装飾品\n防御効果はほとんどない","etypeId":4,"traits":[{"code":22,"dataId":1,"value":0}],"iconIndex":147,"name":"イヤリング","note":"","params":[0,0,0,1,0,0,0,0],"price":0},
+{"id":7,"atypeId":1,"description":"天使の涙を封じたと伝えられる腕輪","etypeId":3,"traits":[{"code":22,"dataId":1,"value":0}],"iconIndex":144,"name":"ティアブレスレット","note":"","params":[0,0,0,20,0,60,0,0],"price":0},
+{"id":8,"atypeId":1,"description":"精霊の力がこめられた神秘的なローブ","etypeId":2,"traits":[{"code":22,"dataId":1,"value":0}],"iconIndex":138,"name":"精霊のローブ","note":"","params":[0,0,0,50,0,50,0,0],"price":0},
+{"id":9,"atypeId":1,"description":"精霊召喚を行うのに必要な魔法石","etypeId":4,"traits":[{"code":22,"dataId":1,"value":0}],"iconIndex":302,"name":"サモンストーン","note":"","params":[0,0,0,0,0,0,0,0],"price":0},
+{"id":10,"atypeId":1,"description":"動きを制限しないよう軽量化された鎧","etypeId":2,"traits":[{"code":22,"dataId":1,"value":0}],"iconIndex":137,"name":"ライトアーマー","note":"","params":[0,0,0,52,0,0,0,0],"price":0},
+{"id":11,"atypeId":1,"description":"魔力を帯びた特別な銀で作られた腕輪","etypeId":3,"traits":[{"code":22,"dataId":1,"value":0}],"iconIndex":144,"name":"シルバーブレス","note":"","params":[0,0,0,10,10,0,0,0],"price":0},
+{"id":12,"atypeId":1,"description":"素早さと回避率を上げてくれるお守り","etypeId":4,"traits":[{"code":22,"dataId":1,"value":0.1}],"iconIndex":147,"name":"スピードシンボル","note":"","params":[0,0,0,1,0,0,30,0],"price":0}
+]
