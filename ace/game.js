@@ -154,7 +154,6 @@ SCENES['court_open'] = [
   },
   {
     speaker: 'edgeworth', bg: 'courtroom_prosecution', right: 'edgeworth', rightPose: 'point',
-    anim: 'hold_it',
     text: '本件は明白です。被告・田中浩二が\n被害者を撲殺した証拠がそろっています。',
   },
   {
