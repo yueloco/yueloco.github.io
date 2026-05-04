@@ -11,9 +11,7 @@ body {
   overflow: hidden;
 }
 
-/* ===== ゲームコンテナ
-   #game は常に 800×480 の固定サイズで描画し、
-   JS で transform: scale() して画面にフィットさせる ===== */
+/* ===== ゲームコンテナ（800×480 固定比率、中身はすべて % 指定） ===== */
 #game-wrap {
   position: relative;
   width: min(100vw, calc(100vh * 800 / 480));
@@ -26,11 +24,7 @@ body {
 }
 #game {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 800px;
-  height: 480px;
-  transform-origin: top left;
+  inset: 0;
   overflow: hidden;
   user-select: none;
   cursor: pointer;
@@ -143,9 +137,9 @@ body {
 }
 .char-slot {
   position: absolute;
-  bottom: 120px;
-  width: 300px;
-  height: 360px;
+  bottom: 25%;    /* 120px ÷ 480px */
+  width: 32%;     /* ~256px ÷ 800px */
+  height: 78%;    /* ~374px ÷ 480px */
   display: flex;
   align-items: flex-end;
   justify-content: center;
@@ -217,21 +211,21 @@ body {
 /* ===== 心証バー ===== */
 #health-container {
   position: absolute;
-  top: 8px;
-  right: 10px;
+  top: 1.7%;
+  right: 1.2%;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 1%;
   z-index: 30;
 }
 #health-label {
   color: #ccc;
-  font-size: 11px;
+  font-size: 2.2vmin;
   white-space: nowrap;
 }
 #health-bar-bg {
-  width: 120px;
-  height: 14px;
+  width: 15%;
+  height: 2.8%;
   background: #1a1a1a;
   border: 1px solid #444;
   border-radius: 3px;
@@ -265,26 +259,26 @@ body {
 /* ===== 証言ボックス ===== */
 #testimony-area {
   position: absolute;
-  top: 8px;
-  left: 10px;
-  right: 140px;
+  top: 1.7%;
+  left: 1.25%;
+  right: 18%;
   background: rgba(0, 30, 60, 0.92);
   border: 2px solid #2a6a9a;
   border-radius: 4px;
-  padding: 8px 10px 6px;
+  padding: 1.5% 1.25% 1%;
   z-index: 25;
 }
 #testimony-header {
   color: #7ac4ff;
-  font-size: 11px;
-  margin-bottom: 4px;
+  font-size: 2.3vmin;
+  margin-bottom: 0.8%;
   letter-spacing: 0.1em;
 }
 #testimony-text {
   color: #fff;
-  font-size: 14px;
+  font-size: 3vmin;
   line-height: 1.5;
-  min-height: 42px;
+  min-height: 8%;
 }
 #testimony-nav {
   display: flex;
@@ -317,20 +311,20 @@ body {
   bottom: 0;
   left: 0;
   right: 0;
-  height: 120px;
+  height: 25%;    /* 120px ÷ 480px */
   background: rgba(4, 8, 20, 0.92);
   border-top: 2px solid #2a5a2a;
-  padding: 6px 14px 8px;
+  padding: 1.2% 1.8%;
   z-index: 20;
 }
 #speaker-name-wrap {
-  min-height: 22px;
-  margin-bottom: 4px;
+  min-height: 4.5%;
+  margin-bottom: 0.8%;
 }
 #speaker-name {
   display: inline-block;
-  padding: 2px 12px;
-  font-size: 13px;
+  padding: 0.4% 1.5%;
+  font-size: 2.7vmin;
   font-weight: bold;
   border-radius: 2px;
   letter-spacing: 0.08em;
@@ -346,44 +340,45 @@ body {
 
 #dialogue-text {
   color: #f0f0f0;
-  font-size: 16px;
+  font-size: 3.3vmin;
   line-height: 1.6;
-  min-height: 52px;
+  min-height: 10%;
 }
 #dialogue-text.narration-style {
   color: #c8c8c8;
   font-style: italic;
-  font-size: 14px;
+  font-size: 2.9vmin;
 }
 #dialogue-text.system-style {
   color: #aaa;
-  font-size: 14px;
+  font-size: 2.9vmin;
   text-align: center;
-  margin-top: 8px;
+  margin-top: 2%;
 }
 #next-indicator {
   position: absolute;
-  bottom: 7px;
-  right: 14px;
+  bottom: 5%;
+  right: 1.8%;
   color: #4a9a4a;
-  font-size: 14px;
+  font-size: 2.9vmin;
   animation: blink 0.9s infinite;
 }
 
 /* ===== アクションボタン ===== */
 #action-btns {
   position: absolute;
-  bottom: 125px;
-  right: 10px;
+  bottom: 26%;
+  right: 1.2%;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 1%;
   z-index: 30;
 }
 #action-btns button {
-  width: 90px;
-  padding: 8px 4px;
-  font-size: 13px;
+  width: 11%;
+  min-width: 70px;
+  padding: 1.5% 1%;
+  font-size: 2.7vmin;
   font-weight: bold;
   border-radius: 4px;
   cursor: pointer;

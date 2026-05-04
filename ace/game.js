@@ -428,18 +428,9 @@ class AceGame {
     this._cacheEls();
     this._bindEvents();
     this._renderHealth();
-    /* レイアウト確定後にスケール計算するため rAF を使う */
-    requestAnimationFrame(() => this._rescale());
-    window.addEventListener('resize', () => this._rescale());
-  }
-
-  /* ---- ゲーム画面スケール（800×480 を画面サイズに合わせて拡縮） ---- */
-  _rescale() {
-    const wrap = document.getElementById('game-wrap');
-    const w = wrap.clientWidth;
-    if (w > 0) {
-      document.getElementById('game').style.transform = `scale(${w / 800})`;
-    }
+    /* キャッシュ初期化（キーは slotEl.id と同じ） */
+    this._currentBg = null;
+    this._currentChars = { 'char-left': null, 'char-right': null, 'char-center': null };
   }
 
   /* ---- DOM参照 ---- */
@@ -656,8 +647,11 @@ class AceGame {
     }, 2200);
   }
 
-  /* ---- 背景切り替え ---- */
+  /* ---- 背景切り替え（同じキーなら何もしない → ちらつき防止） ---- */
   _setBg(key) {
+    if (key === this._currentBg) return;
+    this._currentBg = key;
+
     const cssMap = {
       courtroom_wide:        'bg-courtroom-wide',
       courtroom_judge:       'bg-courtroom-judge',
@@ -668,9 +662,8 @@ class AceGame {
       black:                 'bg-black',
     };
 
-    const cls   = cssMap[key] || '';
+    const cls    = cssMap[key] || '';
     const imgUrl = IMAGES.bg[key] || '';
-    this.el.bg.className = cls;
 
     const img = new Image();
     img.onload = () => {
@@ -681,18 +674,28 @@ class AceGame {
       this.el.bg.style.backgroundImage = '';
       this.el.bg.className = cls;
     };
+    /* 先に CSS グラデを当てて、画像がロード済みなら即座に切り替わる */
+    this.el.bg.className = cls;
     img.src = imgUrl;
   }
 
-  /* ---- キャラクター表示 ---- */
+  /* ---- キャラクター表示（同じ組み合わせなら再ロードしない） ---- */
   _setChar(sprEl, slotEl, charId, pose) {
+    const slotKey = slotEl.id; /* 'char-left' | 'char-right' | 'char-center' */
+    const cacheKey = charId ? `${charId}:${pose}` : null;
+
     if (!charId || charId === 'none') {
+      if (this._currentChars[slotKey] === null) return; /* 既に非表示 */
+      this._currentChars[slotKey] = null;
       sprEl.setAttribute('data-char', 'none');
       sprEl.setAttribute('data-label', '');
       sprEl.style.backgroundImage = '';
       slotEl.style.visibility = 'hidden';
       return;
     }
+
+    if (this._currentChars[slotKey] === cacheKey) return; /* 変化なし */
+    this._currentChars[slotKey] = cacheKey;
 
     slotEl.style.visibility = 'visible';
     const charData = CHARS[charId];
