@@ -105,6 +105,59 @@
         </div>
       </div>
 
+      <!-- メニューボタン -->
+      <button id="btn-menu">&#9881;</button>
+
+      <!-- オプション・セーブロード画面 -->
+      <div id="menu-screen" class="hidden">
+        <div id="menu-inner">
+          <div id="menu-tabs">
+            <button class="menu-tab active" data-tab="options">オプション</button>
+            <button class="menu-tab" data-tab="save">セーブ</button>
+            <button class="menu-tab" data-tab="load">ロード</button>
+          </div>
+
+          <!-- オプションタブ -->
+          <div id="tab-options" class="menu-tab-content">
+            <div class="option-row">
+              <label>マスター音量</label>
+              <input type="range" id="vol-master" min="0" max="100" value="65">
+              <span class="vol-val" id="vol-master-val">65</span>
+            </div>
+            <div class="option-row">
+              <label>BGM音量</label>
+              <input type="range" id="vol-bgm" min="0" max="100" value="55">
+              <span class="vol-val" id="vol-bgm-val">55</span>
+            </div>
+            <div class="option-row">
+              <label>SE音量</label>
+              <input type="range" id="vol-sfx" min="0" max="100" value="100">
+              <span class="vol-val" id="vol-sfx-val">100</span>
+            </div>
+            <div class="option-row">
+              <label>テキスト速度</label>
+              <div class="speed-btns">
+                <button class="speed-btn" data-speed="slow">遅い</button>
+                <button class="speed-btn active" data-speed="normal">普通</button>
+                <button class="speed-btn" data-speed="fast">速い</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- セーブタブ -->
+          <div id="tab-save" class="menu-tab-content hidden">
+            <div class="slot-list" id="save-slots"></div>
+          </div>
+
+          <!-- ロードタブ -->
+          <div id="tab-load" class="menu-tab-content hidden">
+            <div class="slot-list" id="load-slots"></div>
+          </div>
+
+          <button id="btn-menu-close">閉じる</button>
+        </div>
+      </div>
+
     </div>
   </div>
   <script src="game.js"></script>

@@ -451,6 +451,13 @@ class AudioEngine {
     return Promise.resolve();
   }
 
+  setVolume(master, bgm, sfx) {
+    if (!this.enabled) return;
+    this.master.gain.value  = master;
+    this.bgmBus.gain.value  = bgm;
+    this.sfxBus.gain.value  = sfx;
+  }
+
   _ensureRunning(fn) {
     if (!this.enabled) return;
     if (this.ctx.state === 'suspended') {
@@ -627,9 +634,11 @@ class AceGame {
     this.evidenceList = Object.values(EVIDENCE_DATA);
     this.audio = new AudioEngine();
     this.selectedEvidence = null;
+    this.textSpeed = 'normal'; /* slow / normal / fast */
 
     this._cacheEls();
     this._bindEvents();
+    this._applySettings(this._loadSettings());
     this._renderHealth();
     /* キャッシュ初期化（キーは slotEl.id と同じ） */
     this._currentBg = null;
@@ -677,6 +686,22 @@ class AceGame {
       titleScreen:   $('title-screen'),
       btnStart:      $('btn-start'),
       btnRetry:      $('btn-retry'),
+      btnMenu:       $('btn-menu'),
+      menuScreen:    $('menu-screen'),
+      btnMenuClose:  $('btn-menu-close'),
+      menuTabs:      document.querySelectorAll('.menu-tab'),
+      tabOptions:    $('tab-options'),
+      tabSave:       $('tab-save'),
+      tabLoad:       $('tab-load'),
+      volMaster:     $('vol-master'),
+      volBgm:        $('vol-bgm'),
+      volSfx:        $('vol-sfx'),
+      volMasterVal:  $('vol-master-val'),
+      volBgmVal:     $('vol-bgm-val'),
+      volSfxVal:     $('vol-sfx-val'),
+      speedBtns:     document.querySelectorAll('.speed-btn'),
+      saveSlots:     $('save-slots'),
+      loadSlots:     $('load-slots'),
     };
   }
 
@@ -708,6 +733,25 @@ class AceGame {
       e.stopPropagation();
       this.el.gameoverScreen.classList.add('hidden');
       this._restartCrossExam();
+    });
+
+    /* メニュー開閉 */
+    this.el.btnMenu.addEventListener('click', e => { e.stopPropagation(); this._openMenu(); });
+    this.el.btnMenuClose.addEventListener('click', e => { e.stopPropagation(); this._closeMenu(); });
+
+    /* タブ切り替え */
+    this.el.menuTabs.forEach(tab => {
+      tab.addEventListener('click', e => { e.stopPropagation(); this._switchMenuTab(tab.dataset.tab); });
+    });
+
+    /* 音量スライダー */
+    this.el.volMaster.addEventListener('input', () => this._onVolChange());
+    this.el.volBgm.addEventListener('input', () => this._onVolChange());
+    this.el.volSfx.addEventListener('input', () => this._onVolChange());
+
+    /* テキスト速度 */
+    this.el.speedBtns.forEach(btn => {
+      btn.addEventListener('click', e => { e.stopPropagation(); this._setTextSpeed(btn.dataset.speed); });
     });
   }
 
@@ -798,6 +842,7 @@ class AceGame {
     this.el.dialogueText.textContent = '';
     clearInterval(this.typeTimer);
 
+    const delay = { slow: 55, normal: 28, fast: 10 }[this.textSpeed] || 28;
     this.typeTimer = setInterval(() => {
       idx++;
       this.el.dialogueText.textContent = this.fullText.slice(0, idx);
@@ -807,7 +852,7 @@ class AceGame {
         this.typing = false;
         if (onDone) onDone();
       }
-    }, 28);
+    }, delay);
   }
 
   _finishTyping() {
@@ -1260,6 +1305,193 @@ class AceGame {
         location.reload();
       }
     }, { once: true });
+  }
+  /* ================================================================
+     メニュー
+     ================================================================ */
+  _openMenu() {
+    this.el.menuScreen.classList.remove('hidden');
+    this._switchMenuTab('options');
+  }
+
+  _closeMenu() {
+    this.el.menuScreen.classList.add('hidden');
+    this._saveSettings();
+  }
+
+  _switchMenuTab(tab) {
+    this.el.menuTabs.forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
+    this.el.tabOptions.classList.toggle('hidden', tab !== 'options');
+    this.el.tabSave.classList.toggle('hidden', tab !== 'save');
+    this.el.tabLoad.classList.toggle('hidden', tab !== 'load');
+    if (tab === 'save') this._renderSlots('save');
+    if (tab === 'load') this._renderSlots('load');
+  }
+
+  /* ================================================================
+     音量・テキスト速度
+     ================================================================ */
+  _onVolChange() {
+    const mv = +this.el.volMaster.value;
+    const bv = +this.el.volBgm.value;
+    const sv = +this.el.volSfx.value;
+    this.el.volMasterVal.textContent = mv;
+    this.el.volBgmVal.textContent    = bv;
+    this.el.volSfxVal.textContent    = sv;
+    this.audio.setVolume(mv / 100, bv / 100, sv / 100);
+  }
+
+  _setTextSpeed(speed) {
+    this.textSpeed = speed;
+    this.el.speedBtns.forEach(b => b.classList.toggle('active', b.dataset.speed === speed));
+  }
+
+  /* ================================================================
+     設定の保存・復元
+     ================================================================ */
+  _saveSettings() {
+    const s = {
+      volMaster: +this.el.volMaster.value,
+      volBgm:    +this.el.volBgm.value,
+      volSfx:    +this.el.volSfx.value,
+      textSpeed: this.textSpeed,
+    };
+    localStorage.setItem('ace_settings', JSON.stringify(s));
+  }
+
+  _loadSettings() {
+    try { return JSON.parse(localStorage.getItem('ace_settings') || '{}'); } catch { return {}; }
+  }
+
+  _applySettings(s) {
+    if (s.volMaster !== undefined) { this.el.volMaster.value = s.volMaster; this.el.volMasterVal.textContent = s.volMaster; }
+    if (s.volBgm    !== undefined) { this.el.volBgm.value    = s.volBgm;    this.el.volBgmVal.textContent    = s.volBgm; }
+    if (s.volSfx    !== undefined) { this.el.volSfx.value    = s.volSfx;    this.el.volSfxVal.textContent    = s.volSfx; }
+    if (s.textSpeed)               this._setTextSpeed(s.textSpeed);
+    const mv = +this.el.volMaster.value, bv = +this.el.volBgm.value, sv = +this.el.volSfx.value;
+    this.audio.setVolume(mv / 100, bv / 100, sv / 100);
+  }
+
+  /* ================================================================
+     セーブ・ロード
+     ================================================================ */
+  _buildSaveData() {
+    return {
+      sceneKey:      this.sceneKey,
+      stepIdx:       this.stepIdx,
+      ceHealth:      this.ceHealth,
+      ceIdx:         this.ceIdx,
+      cePressedSet:  [...this.cePressedSet],
+      ceActive:      this.ceActive,
+      state:         this.state,
+      date:          new Date().toLocaleString('ja-JP'),
+      label:         this._saveLabel(),
+    };
+  }
+
+  _saveLabel() {
+    const scene = SCENES[this.sceneKey];
+    if (!scene) return this.sceneKey;
+    const step = scene[this.stepIdx] || scene[scene.length - 1];
+    if (!step) return this.sceneKey;
+    const text = step.text || '';
+    return text.slice(0, 18).replace(/\n/g, ' ') + (text.length > 18 ? '…' : '');
+  }
+
+  _writeSave(slot) {
+    const saves = this._getAllSaves();
+    saves[slot] = this._buildSaveData();
+    localStorage.setItem('ace_saves', JSON.stringify(saves));
+    this._renderSlots('save');
+  }
+
+  _readSave(slot) {
+    const saves = this._getAllSaves();
+    const data  = saves[slot];
+    if (!data) return;
+    this.sceneKey = data.sceneKey;
+    this.stepIdx  = data.stepIdx;
+    this.ceHealth = data.ceHealth ?? CROSSEXAM.maxHealth;
+    this.ceIdx    = data.ceIdx ?? 0;
+    this.cePressedSet = new Set(data.cePressedSet || []);
+    this.ceActive = false;
+    this._closeMenu();
+    this.el.titleScreen.classList.add('hidden');
+    this.el.gameoverScreen.classList.add('hidden');
+    this.audio.resume();
+    this.audio.bgm('court');
+    this.state = 'dialogue';
+    this._currentBg = null;
+    this._currentChars = { 'char-left': null, 'char-right': null, 'char-center': null };
+    this._runStep();
+  }
+
+  _deleteSave(slot) {
+    const saves = this._getAllSaves();
+    delete saves[slot];
+    localStorage.setItem('ace_saves', JSON.stringify(saves));
+    this._renderSlots('save');
+    this._renderSlots('load');
+  }
+
+  _getAllSaves() {
+    try { return JSON.parse(localStorage.getItem('ace_saves') || '{}'); } catch { return {}; }
+  }
+
+  _renderSlots(mode) {
+    const container = mode === 'save' ? this.el.saveSlots : this.el.loadSlots;
+    const saves = this._getAllSaves();
+    container.innerHTML = '';
+    const inGame = this.state !== 'title';
+
+    for (let i = 1; i <= 3; i++) {
+      const data  = saves[i];
+      const el    = document.createElement('div');
+      el.className = 'save-slot' + (data ? '' : ' empty');
+
+      const numEl   = document.createElement('span');
+      numEl.className = 'slot-num';
+      numEl.textContent = `No.${i}`;
+
+      const infoEl  = document.createElement('div');
+      infoEl.className = 'slot-info';
+      const titleEl = document.createElement('div');
+      titleEl.className = 'slot-title';
+      titleEl.textContent = data ? data.label : '― 空きスロット ―';
+      const dateEl  = document.createElement('div');
+      dateEl.className = 'slot-date';
+      dateEl.textContent = data ? data.date : '';
+      infoEl.append(titleEl, dateEl);
+
+      const actionEl = document.createElement('button');
+      actionEl.className = 'slot-action';
+
+      if (mode === 'save') {
+        actionEl.textContent = 'セーブ';
+        actionEl.disabled = !inGame;
+        actionEl.addEventListener('click', e => { e.stopPropagation(); this._writeSave(i); });
+      } else {
+        actionEl.textContent = 'ロード';
+        actionEl.disabled = !data;
+        actionEl.addEventListener('click', e => { e.stopPropagation(); if (data) this._readSave(i); });
+
+        if (data) {
+          const delEl = document.createElement('button');
+          delEl.className = 'slot-action';
+          delEl.textContent = '削除';
+          delEl.style.marginLeft = '4%';
+          delEl.addEventListener('click', e => { e.stopPropagation(); this._deleteSave(i); });
+          el.append(numEl, infoEl, actionEl, delEl);
+        } else {
+          el.append(numEl, infoEl, actionEl);
+        }
+        container.appendChild(el);
+        continue;
+      }
+
+      el.append(numEl, infoEl, actionEl);
+      container.appendChild(el);
+    }
   }
 }
 
