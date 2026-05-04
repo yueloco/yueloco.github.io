@@ -332,9 +332,9 @@ SCENES['epilogue_2'] = [
   },
   {
     speaker: 'narration', bg: 'black',
-    text: '真実は……まだ、闇の中にある。',
+    text: '真実は……まだ、闇の中にある。\n\n翌日、第二回公判が始まろうとしていた――',
   },
-  { type: 'end' },
+  { type: 'scene_label', text: '第2日　午前10時\n地方裁判所 第3法廷', bg: 'black', goto: 'day2_court' },
 ];
 
 /* ================================================================
@@ -408,6 +408,246 @@ const CROSSEXAM = {
     },
   ],
 };
+
+/* ================================================================
+   第2反対尋問データ
+   ================================================================ */
+const CROSSEXAM2 = {
+  witnessName: '上条 京介',
+  maxHealth: 5,
+  contradictionLines: [
+    { speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'point',
+      text: '勤怠記録を見てください！\n8階の在室ログには15分の滞在記録があります！\n「すぐ戻った」は嘘です！' },
+    { speaker: 'kamijo', bg: 'courtroom_witness', center: 'kamijo', centerPose: 'surprised',
+      text: 'そ……それは……！' },
+    { speaker: 'kamijo', bg: 'courtroom_witness', center: 'kamijo', centerPose: 'breakdown',
+      text: '……もう……隠せません……！' },
+  ],
+  nextScene: 'day2_after_contradiction',
+  statements: [
+    /* 0 */
+    {
+      text: '8階に到着した際、\n部屋には誰もいませんでした。',
+      pressScene: [
+        { speaker: 'phoenix', text: '「誰もいなかった」——本当ですか？\n何か音や気配は感じませんでしたか？', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'normal' },
+        { speaker: 'kamijo', text: '……実は……', bg: 'courtroom_witness', center: 'kamijo', centerPose: 'nervous' },
+        { speaker: 'kamijo', text: '非常階段の方から……\n何かが動く音がしたような……', bg: 'courtroom_witness', center: 'kamijo', centerPose: 'nervous' },
+        { speaker: 'phoenix', text: '（非常階段……！）', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'surprised' },
+        { speaker: 'maya', text: '（誰かが階段で逃げた？\n　それって犯人じゃないの！？）', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'normal', right: 'maya', rightPose: 'worried' },
+      ],
+      contradicts: null,
+    },
+    /* 1 */
+    {
+      text: '私は今度こそ正直に\n証言しています。',
+      pressScene: [
+        { speaker: 'phoenix', text: '「今度こそ」……昨日は\n証言を偽りましたよね？', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'point' },
+        { speaker: 'kamijo', text: '……それは……怖かったんです。\n死体を見て、パニックになって……', bg: 'courtroom_witness', center: 'kamijo', centerPose: 'nervous' },
+        { speaker: 'kamijo', text: 'もし私が疑われたら……\nそう思って改ざんしてしまいました。', bg: 'courtroom_witness', center: 'kamijo', centerPose: 'normal' },
+        { speaker: 'phoenix', text: '（証人は何か……まだ隠している）', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'think' },
+      ],
+      contradicts: null,
+    },
+    /* 2 ★矛盾 work_log */
+    {
+      text: '被害者を発見後、私は\nすぐにエレベーターで管理室へ戻りました。',
+      pressScene: [
+        { speaker: 'phoenix', text: '「すぐに」——それは何分くらいで？', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'normal' },
+        { speaker: 'kamijo', text: '2、3分……いや、\nほんの一瞬でしたよ。', bg: 'courtroom_witness', center: 'kamijo', centerPose: 'nervous' },
+        { speaker: 'phoenix', text: '（一瞬……勤怠記録と照らし合わせれば\n　はっきりするはずだ）', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'think' },
+      ],
+      contradicts: 'work_log',
+      wrongPenalty: 'この証拠では証言の矛盾を突けない。\n別の証拠を試してみてください。',
+    },
+  ],
+};
+
+/* ---- 第2日シーン ---- */
+SCENES['day2_court'] = [
+  {
+    speaker: 'judge', bg: 'courtroom_judge', center: 'judge', centerPose: 'normal',
+    text: '第二回公判を開廷いたします。',
+  },
+  {
+    speaker: 'judge', bg: 'courtroom_judge', center: 'judge', centerPose: 'normal',
+    text: '昨日の証言で新たな事実が発覚しました。\n引き続き証人を尋問いたします。',
+  },
+  {
+    speaker: 'edgeworth', bg: 'courtroom_prosecution', right: 'edgeworth', rightPose: 'thinking',
+    text: '……検察は昨日の証言を\n重く受け止めています。',
+  },
+  {
+    speaker: 'edgeworth', bg: 'courtroom_prosecution', right: 'edgeworth', rightPose: 'normal',
+    text: '本日、証人に再度の証言を\n求めることに同意します。',
+  },
+  {
+    speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'confident',
+    right: 'maya', rightPose: 'normal',
+    text: '（今日こそ——真実を明らかにする）',
+  },
+  {
+    speaker: 'judge', bg: 'courtroom_judge', center: 'judge', centerPose: 'normal',
+    text: '証人・上条京介を\n再召喚します。',
+  },
+  {
+    speaker: 'kamijo', bg: 'courtroom_witness', center: 'kamijo', centerPose: 'nervous',
+    text: '……よろしくお願いします。',
+  },
+  {
+    speaker: 'edgeworth', bg: 'courtroom_prosecution', right: 'edgeworth', rightPose: 'normal',
+    text: '証人、8階での状況をより詳しく\n証言してください。',
+    goto: 'day2_testimony',
+  },
+];
+
+SCENES['day2_testimony'] = [
+  {
+    speaker: 'system', bg: 'courtroom_witness', center: 'kamijo', centerPose: 'nervous',
+    text: '＜第二証言＞　上条 京介の再証言が始まります。\n勤怠記録に注目してください。',
+  },
+  { type: 'crossexam_start', ceData: 'crossexam2' },
+];
+
+SCENES['day2_after_contradiction'] = [
+  {
+    speaker: 'kamijo', bg: 'courtroom_witness', center: 'kamijo', centerPose: 'breakdown',
+    text: '……実は……8階に15分ほど\n留まっていました。',
+  },
+  {
+    speaker: 'kamijo', bg: 'courtroom_witness', center: 'kamijo', centerPose: 'nervous',
+    text: '倒れている部長を見て、\n助けられないか確認したんです……',
+  },
+  {
+    speaker: 'kamijo', bg: 'courtroom_witness', center: 'kamijo', centerPose: 'breakdown',
+    text: 'そして……非常階段のドアが\n閉まる音がして……',
+  },
+  {
+    speaker: 'kamijo', bg: 'courtroom_witness', center: 'kamijo', centerPose: 'nervous',
+    text: '薄暗い廊下に、\n人影が見えたんです。',
+  },
+  {
+    speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'surprised',
+    right: 'maya', rightPose: 'surprised',
+    text: '人影！？\n誰だったんですか！？',
+  },
+  {
+    speaker: 'kamijo', bg: 'courtroom_witness', center: 'kamijo', centerPose: 'normal',
+    text: '……林 義雄……\n山本部長の直属の部下……副部長です。',
+  },
+  {
+    speaker: 'judge', bg: 'courtroom_judge', center: 'judge', centerPose: 'surprised',
+    text: 'な……なんと！！',
+  },
+  {
+    speaker: 'edgeworth', bg: 'courtroom_prosecution', right: 'edgeworth', rightPose: 'surprised',
+    text: '……！',
+  },
+  {
+    speaker: 'edgeworth', bg: 'courtroom_prosecution', right: 'edgeworth', rightPose: 'thinking',
+    text: '（林副部長……彼は山本部長による\n　横領告発の被害者だ。動機がある……）',
+  },
+  {
+    speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'point',
+    right: 'maya', rightPose: 'excited',
+    anim: 'objection',
+    text: '林義雄が8階に潜んでいた！\n被告・田中さんが退社した後に\n殺害は行われたんです！',
+  },
+  {
+    speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'point',
+    text: '検死報告書の死亡推定時刻は\n21時10分から21時50分。\n田中さんのアリバイは完璧です！',
+  },
+  {
+    speaker: 'edgeworth', bg: 'courtroom_prosecution', right: 'edgeworth', rightPose: 'normal',
+    text: '…………',
+  },
+  {
+    speaker: 'edgeworth', bg: 'courtroom_prosecution', right: 'edgeworth', rightPose: 'thinking',
+    text: '（……成歩堂の言う通りだ。\n　証拠は全て田中の無実を指し示している）',
+  },
+  {
+    speaker: 'edgeworth', bg: 'courtroom_prosecution', right: 'edgeworth', rightPose: 'normal',
+    text: '……裁判長。',
+  },
+  {
+    speaker: 'edgeworth', bg: 'courtroom_prosecution', right: 'edgeworth', rightPose: 'point',
+    text: '検察は、被告・田中浩二に対する\n起訴を取り下げます。',
+  },
+  {
+    speaker: 'judge', bg: 'courtroom_judge', center: 'judge', centerPose: 'surprised',
+    text: 'な……！\n御剣検事、それは——',
+  },
+  {
+    speaker: 'edgeworth', bg: 'courtroom_prosecution', right: 'edgeworth', rightPose: 'smirk',
+    text: '真実の前には……\n検察も潔く非を認めるべきでしょう。',
+  },
+  {
+    speaker: 'judge', bg: 'courtroom_judge', center: 'judge', centerPose: 'stern',
+    text: '……よろしい。',
+  },
+  {
+    speaker: 'judge', bg: 'courtroom_judge', center: 'judge', centerPose: 'normal',
+    text: '本件被告・田中浩二に対し、\n無　罪　を言い渡す！',
+  },
+  {
+    speaker: 'narration', bg: 'courtroom_wide',
+    text: '――　閉　廷　――',
+  },
+  { type: 'scene_label', text: '判決後\n法廷の廊下', bg: 'corridor', goto: 'ending' },
+];
+
+SCENES['ending'] = [
+  {
+    speaker: 'maya', bg: 'corridor', left: 'phoenix', leftPose: 'normal',
+    right: 'maya', rightPose: 'excited',
+    text: 'やった！無罪！\n成歩堂くん、すごい！！',
+  },
+  {
+    speaker: 'phoenix', bg: 'corridor', left: 'phoenix', leftPose: 'confident',
+    right: 'maya', rightPose: 'happy',
+    text: '田中さんが助かった。\nそれだけで十分だ。',
+  },
+  {
+    speaker: 'maya', bg: 'corridor', left: 'phoenix', leftPose: 'normal',
+    right: 'maya', rightPose: 'normal',
+    text: 'でも……御剣さんって\nかっこよかったね。',
+  },
+  {
+    speaker: 'phoenix', bg: 'corridor', left: 'phoenix', leftPose: 'think',
+    right: 'maya', rightPose: 'happy',
+    text: '……あいつは昔から\nああいうやつなんだ。',
+  },
+  {
+    speaker: 'edgeworth', bg: 'corridor', right: 'edgeworth', rightPose: 'normal',
+    text: '……成歩堂。',
+  },
+  {
+    speaker: 'phoenix', bg: 'corridor', left: 'phoenix', leftPose: 'surprised',
+    right: 'edgeworth', rightPose: 'normal',
+    text: '御剣……',
+  },
+  {
+    speaker: 'edgeworth', bg: 'corridor', right: 'edgeworth', rightPose: 'smirk',
+    text: '今日は……負けを認めよう。\nだが次は負けん。',
+  },
+  {
+    speaker: 'phoenix', bg: 'corridor', left: 'phoenix', leftPose: 'confident',
+    right: 'edgeworth', rightPose: 'smirk',
+    text: 'ああ。法廷で会おう、御剣。',
+  },
+  {
+    speaker: 'narration', bg: 'corridor',
+    text: '真実は、明かされた。\n田中浩二は自由の身となった。',
+  },
+  {
+    speaker: 'narration', bg: 'corridor',
+    text: '林義雄は後日、\n別件の横領と殺人の疑いで逮捕される。',
+  },
+  {
+    speaker: 'narration', bg: 'black',
+    text: '成歩堂 龍一の、長い戦いは\nまだ始まったばかりだ――',
+  },
+  { type: 'end' },
+];
 
 /* ================================================================
    ゲームエンジン
@@ -803,7 +1043,8 @@ class AceGame {
     }
 
     if (step.type === 'crossexam_start') {
-      this._startCrossExam();
+      const ceData = step.ceData === 'crossexam2' ? CROSSEXAM2 : CROSSEXAM;
+      this._startCrossExam(ceData);
       return;
     }
 
@@ -1015,11 +1256,12 @@ class AceGame {
   }
 
   /* ---- 反対尋問 開始 ---- */
-  _startCrossExam() {
+  _startCrossExam(ceData = CROSSEXAM) {
+    this.ceCurrent = ceData;
     this.ceActive  = true;
     this.ceIdx     = 0;
-    this.ceHealth  = CROSSEXAM.maxHealth;
-    this.ceStatements = CROSSEXAM.statements.map(s => ({ ...s }));
+    this.ceHealth  = ceData.maxHealth;
+    this.ceStatements = ceData.statements.map(s => ({ ...s }));
     this.cePressedSet.clear();
 
     this.audio.bgm('crossexam');
@@ -1029,7 +1271,7 @@ class AceGame {
     this.el.dialogueBox.classList.remove('hidden');
     this.el.nextIndicator.style.display = 'none';
 
-    this.el.testimonyWitness.textContent = CROSSEXAM.witnessName;
+    this.el.testimonyWitness.textContent = ceData.witnessName;
     this._renderHealth();
     this._showTestimony();
   }
@@ -1040,7 +1282,7 @@ class AceGame {
     this.el.testimonyCounter.textContent = `${this.ceIdx + 1}／${this.ceStatements.length}`;
 
     /* 台詞欄に証言者名 */
-    this.el.speakerName.textContent = CROSSEXAM.witnessName;
+    this.el.speakerName.textContent = this.ceCurrent.witnessName;
     this.el.speakerName.className   = 'spk-kamijo';
     this.el.dialogueText.textContent = '（← ▶ で証言を移動 ／ 「尋問」で詳しく聞く ／ 「証拠提出」で矛盾を指摘）';
     this.el.dialogueText.className  = 'system-style';
@@ -1231,14 +1473,16 @@ class AceGame {
   }
 
   _renderHealth() {
-    const pct = (this.ceHealth / CROSSEXAM.maxHealth) * 100;
+    const max = this.ceCurrent?.maxHealth ?? CROSSEXAM.maxHealth;
+    const pct = (this.ceHealth / max) * 100;
     this.el.healthFill.style.width = pct + '%';
     this.el.healthFill.className = pct <= 40 ? 'damage' : '';
   }
 
   /* ---- 矛盾後の台詞 ---- */
   _showContradictionDialogue() {
-    const lines = [
+    const ce = this.ceCurrent || CROSSEXAM;
+    const lines = ce.contradictionLines || [
       { speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'point',
         text: 'エレベーター記録を見てください！\n22時20分に8階への記録があります！' },
       { speaker: 'kamijo', bg: 'courtroom_witness', center: 'kamijo', centerPose: 'surprised',
@@ -1246,8 +1490,9 @@ class AceGame {
       { speaker: 'kamijo', bg: 'courtroom_witness', center: 'kamijo', centerPose: 'nervous',
         text: 'そ、それは……！' },
     ];
+    const nextScene = ce.nextScene || 'after_contradiction';
     this._runPressScene(lines, 0, () => {
-      this.sceneKey = 'after_contradiction';
+      this.sceneKey = nextScene;
       this.stepIdx  = 0;
       this.state    = 'dialogue';
       this._runStep();
@@ -1290,12 +1535,15 @@ class AceGame {
   }
 
   _restartCrossExam() {
-    this.ceHealth = CROSSEXAM.maxHealth;
-    this.ceStatements = CROSSEXAM.statements.map(s => ({ ...s }));
+    const ce = this.ceCurrent || CROSSEXAM;
+    this.ceHealth = ce.maxHealth;
+    this.ceStatements = ce.statements.map(s => ({ ...s }));
     this.cePressedSet.clear();
-    this.sceneKey = 'testimony_intro';
-    this.stepIdx  = 1; /* crossexam_startステップ */
-    this._startCrossExam();
+    /* crossexam_startステップに戻る（sceneは現在のcurrentのまま） */
+    const restartScene = ce === CROSSEXAM2 ? 'day2_testimony' : 'testimony_intro';
+    this.sceneKey = restartScene;
+    this.stepIdx  = 1;
+    this._startCrossExam(ce);
   }
 
   /* ---- エンド ---- */
