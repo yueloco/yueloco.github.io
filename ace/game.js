@@ -405,6 +405,192 @@ const CROSSEXAM = {
 /* ================================================================
    ゲームエンジン
    ================================================================ */
+/* ================================================================
+   AudioEngine — Web Audio API でSE・BGMを生成
+   音声ファイルがなくても動作します。
+   独自の音源を使う場合は AUDIO_FILES に mp3/ogg のパスを設定してください。
+   ================================================================ */
+
+/* 音声ファイル（省略可能。パスが正しければ自動的に優先されます） */
+const AUDIO_FILES = {
+  bgm_court:     'audio/bgm_court.mp3',
+  bgm_crossexam: 'audio/bgm_crossexam.mp3',
+  sfx_objection: 'audio/sfx_objection.mp3',
+  sfx_hold_it:   'audio/sfx_hold_it.mp3',
+  sfx_damage:    'audio/sfx_damage.mp3',
+  sfx_correct:   'audio/sfx_correct.mp3',
+};
+
+class AudioEngine {
+  constructor() {
+    this.enabled       = false;
+    this._bgmType      = null;
+    this._bgmActive    = false;
+    this._bgmOscs      = [];
+    this._bgmTimers    = [];
+    this._typingTick   = 0;
+
+    try {
+      const Ctx = window.AudioContext || window.webkitAudioContext;
+      if (!Ctx) return;
+      this.ctx = new Ctx();
+      this.master = this.ctx.createGain();
+      this.master.gain.value = 0.65;
+      this.master.connect(this.ctx.destination);
+      this.bgmBus = this.ctx.createGain();
+      this.bgmBus.gain.value = 0.55;
+      this.bgmBus.connect(this.master);
+      this.sfxBus = this.ctx.createGain();
+      this.sfxBus.gain.value = 1.0;
+      this.sfxBus.connect(this.master);
+      this.enabled = true;
+    } catch(e) {}
+  }
+
+  resume() {
+    if (this.ctx?.state === 'suspended') this.ctx.resume();
+  }
+
+  /* ---- SE ---- */
+  sfx(name) {
+    if (!this.enabled) return;
+    ({
+      objection: () => this._chord([261.6, 329.6, 392, 523.3], 'sawtooth', 0.14, 0.7),
+      hold_it:   () => this._chord([293.7, 370, 440, 587.3],   'sawtooth', 0.14, 0.7),
+      take_that: () => this._chord([220, 277.2, 329.6, 440],   'sawtooth', 0.14, 0.7),
+      damage:    () => this._sweep(380, 70,  0.25, 0.55),
+      correct:   () => this._chord([523.3, 659.3, 784, 1046.5], 'sine', 0.13, 0.5, true),
+      wrong:     () => this._sweep(220, 90,  0.2,  0.4),
+      page:      () => this._tone('sine',   880, 0.06, 0.07),
+      typing:    () => this._tone('square', 1100 + Math.random()*400, 0.03, 0.035),
+    }[name] || (() => {}))();
+  }
+
+  typing() {
+    this._typingTick++;
+    if (this._typingTick % 2 === 0) this.sfx('typing');
+  }
+
+  /* ---- BGM ---- */
+  bgm(type) {
+    if (!this.enabled || this._bgmType === type) return;
+    this._stopBgm();
+    this._bgmType   = type;
+    this._bgmActive = true;
+    if (type === 'court')     this._courtBgm();
+    if (type === 'crossexam') this._crossExamBgm();
+  }
+
+  _stopBgm() {
+    this._bgmActive = false;
+    this._bgmType   = null;
+    this._bgmTimers.forEach(id => clearTimeout(id));
+    this._bgmTimers = [];
+    this._bgmOscs.forEach(o => { try { o.stop(); } catch(e) {} });
+    this._bgmOscs = [];
+  }
+
+  /* ---- 低レベル生成 ---- */
+  _tone(type, freq, vol, dur) {
+    const t = this.ctx.currentTime;
+    const o = this.ctx.createOscillator(), g = this.ctx.createGain();
+    o.type = type; o.frequency.value = freq;
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(vol, t + dur * 0.15);
+    g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+    o.connect(g); g.connect(this.sfxBus);
+    o.start(t); o.stop(t + dur + 0.01);
+  }
+
+  _chord(freqs, type, vol, dur, stagger = false) {
+    freqs.forEach((f, i) => {
+      const delay = stagger ? i * 0.09 : 0;
+      const t = this.ctx.currentTime + delay;
+      const o = this.ctx.createOscillator(), g = this.ctx.createGain();
+      o.type = type; o.frequency.value = f;
+      g.gain.setValueAtTime(0, t);
+      g.gain.linearRampToValueAtTime(vol / freqs.length, t + 0.03);
+      g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+      o.connect(g); g.connect(this.sfxBus);
+      o.start(t); o.stop(t + dur + 0.01);
+    });
+  }
+
+  _sweep(f0, f1, vol, dur) {
+    const t = this.ctx.currentTime;
+    const o = this.ctx.createOscillator(), g = this.ctx.createGain();
+    o.type = 'sawtooth';
+    o.frequency.setValueAtTime(f0, t);
+    o.frequency.exponentialRampToValueAtTime(f1, t + dur);
+    g.gain.setValueAtTime(vol, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+    o.connect(g); g.connect(this.sfxBus);
+    o.start(t); o.stop(t + dur + 0.01);
+  }
+
+  _drone(freqs, type, vol) {
+    freqs.forEach(f => {
+      const o = this.ctx.createOscillator(), g = this.ctx.createGain();
+      o.type = type; o.frequency.value = f;
+      g.gain.value = vol;
+      o.connect(g); g.connect(this.bgmBus);
+      o.start(); this._bgmOscs.push(o);
+    });
+  }
+
+  _loopNotes(notes, vol, oscType) {
+    const totalDur = notes.reduce((s, [, d]) => s + d, 0);
+    let loopStart  = this.ctx.currentTime;
+    const tick = () => {
+      if (!this._bgmActive) return;
+      let t = loopStart;
+      notes.forEach(([freq, dur]) => {
+        if (freq > 0) {
+          const o = this.ctx.createOscillator(), g = this.ctx.createGain();
+          o.type = oscType; o.frequency.value = freq;
+          g.gain.setValueAtTime(0, t);
+          g.gain.linearRampToValueAtTime(vol, t + 0.02);
+          g.gain.setValueAtTime(vol * 0.6, t + dur * 0.75);
+          g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+          o.connect(g); g.connect(this.bgmBus);
+          o.start(t); o.stop(t + dur + 0.01);
+        }
+        t += dur;
+      });
+      loopStart += totalDur;
+      const id = setTimeout(tick, Math.max(50, (loopStart - this.ctx.currentTime - 0.4) * 1000));
+      this._bgmTimers.push(id);
+    };
+    tick();
+  }
+
+  /* ---- BGMパターン ---- */
+  _courtBgm() {
+    this._drone([55, 110, 165], 'sine', 0.025);
+    this._loopNotes([
+      [220, 0.5], [246.9, 0.5], [261.6, 0.5], [293.7, 0.5],
+      [329.6, 1.0], [293.7, 0.5], [261.6, 0.5], [246.9, 1.0],
+      [220, 0.5], [196,   0.5], [220,   0.5], [246.9, 0.5],
+      [220, 2.0],
+    ], 0.07, 'triangle');
+  }
+
+  _crossExamBgm() {
+    this._drone([73.4, 146.8], 'sawtooth', 0.022);
+    this._loopNotes([
+      [220,   0.15], [220,   0.15], [246.9, 0.15], [220,   0.15],
+      [196,   0.30], [174.6, 0.15], [196,   0.15],
+      [220,   0.15], [246.9, 0.15], [261.6, 0.15], [246.9, 0.15],
+      [246.9, 0.60],
+    ], 0.10, 'square');
+    this._loopNotes([
+      [73.4, 0.20], [0, 0.20], [73.4, 0.10], [0, 0.10], [73.4, 0.20], [0, 0.40],
+    ], 0.09, 'sawtooth');
+  }
+}
+
+/* ================================================================ */
+
 class AceGame {
   constructor() {
     this.state       = 'title';
@@ -423,6 +609,7 @@ class AceGame {
 
     /* 証拠品 */
     this.evidenceList = Object.values(EVIDENCE_DATA);
+    this.audio = new AudioEngine();
     this.selectedEvidence = null;
 
     this._cacheEls();
@@ -510,6 +697,8 @@ class AceGame {
 
   /* ---- ゲーム開始 ---- */
   _startGame() {
+    this.audio.resume();
+    this.audio.bgm('court');
     this.el.titleScreen.classList.add('hidden');
     this.state = 'dialogue';
     this.sceneKey = 'opening';
@@ -596,6 +785,7 @@ class AceGame {
     this.typeTimer = setInterval(() => {
       idx++;
       this.el.dialogueText.textContent = this.fullText.slice(0, idx);
+      this.audio.typing();
       if (idx >= this.fullText.length) {
         clearInterval(this.typeTimer);
         this.typing = false;
@@ -620,6 +810,7 @@ class AceGame {
       return;
     }
 
+    this.audio.sfx('page');
     this._nextStep();
     this._runStep();
   }
@@ -744,6 +935,7 @@ class AceGame {
       this.el.flashPortrait.style.backgroundImage = '';
     }
 
+    this.audio.sfx(type);
     this.el.flashOverlay.classList.remove('hidden');
 
     setTimeout(() => {
@@ -761,6 +953,7 @@ class AceGame {
     this.ceStatements = CROSSEXAM.statements.map(s => ({ ...s }));
     this.cePressedSet.clear();
 
+    this.audio.bgm('crossexam');
     this.el.testimonyArea.classList.remove('hidden');
     this.el.healthCont.classList.remove('hidden');
     this.el.actionBtns.classList.remove('hidden');
@@ -954,6 +1147,7 @@ class AceGame {
     this.ceHealth = Math.max(0, this.ceHealth - 1);
     this._renderHealth();
 
+    this.audio.sfx('damage');
     this.el.bg.style.animation = 'damage-flash 0.5s ease';
     setTimeout(() => { this.el.bg.style.animation = ''; }, 500);
 
@@ -994,6 +1188,7 @@ class AceGame {
   /* ---- 反対尋問終了処理 ---- */
   _exitCrossExam() {
     this.ceActive = false;
+    this.audio.bgm('court');
     this.el.testimonyArea.classList.add('hidden');
     this.el.healthCont.classList.add('hidden');
     this.el.actionBtns.classList.add('hidden');
