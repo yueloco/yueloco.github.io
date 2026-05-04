@@ -162,10 +162,12 @@ SCENES['court_open'] = [
   },
   {
     speaker: 'maya', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'normal',
+    right: 'maya', rightPose: 'normal',
     text: '成歩堂くん、緊張してる？',
   },
   {
     speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'confident',
+    right: 'maya', rightPose: 'happy',
     text: '少しな。でも——田中さんは無実だ。\nそれだけは確かだ。',
   },
   {
@@ -296,26 +298,32 @@ SCENES['epilogue'] = [
 SCENES['epilogue_2'] = [
   {
     speaker: 'maya', bg: 'corridor', left: 'phoenix', leftPose: 'normal',
+    right: 'maya', rightPose: 'excited',
     text: '成歩堂くん、すごかったよ！\n証言の矛盾、バッチリ見つけたね！',
   },
   {
     speaker: 'phoenix', bg: 'corridor', left: 'phoenix', leftPose: 'confident',
+    right: 'maya', rightPose: 'happy',
     text: 'エレベーター記録が鍵だった。\n数字は嘘をつかない。',
   },
   {
     speaker: 'maya', bg: 'corridor', left: 'phoenix', leftPose: 'normal',
+    right: 'maya', rightPose: 'worried',
     text: 'でも……本当の犯人は\nまだわからないんでしょ？',
   },
   {
     speaker: 'phoenix', bg: 'corridor', left: 'phoenix', leftPose: 'think',
+    right: 'maya', rightPose: 'worried',
     text: '……ああ。上条が8階に着いた22時20分より前に\n山本さんを殺した人物がいるはずだ。',
   },
   {
     speaker: 'phoenix', bg: 'corridor', left: 'phoenix', leftPose: 'confident',
+    right: 'maya', rightPose: 'normal',
     text: '田中さんのためにも、\n真実を明らかにしないとな。',
   },
   {
     speaker: 'maya', bg: 'corridor', left: 'phoenix', leftPose: 'normal',
+    right: 'maya', rightPose: 'excited',
     text: 'うん！一緒にがんばろう、成歩堂くん！',
   },
   {
@@ -357,7 +365,7 @@ const CROSSEXAM = {
         { speaker: 'kamijo',    text: '受付カウンターのガラス越しに\n見えたんです。', bg: 'courtroom_witness', center: 'kamijo', centerPose: 'normal' },
         { speaker: 'phoenix',   text: 'ガラス越しに……顔まで\nはっきり確認できましたか？', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'think' },
         { speaker: 'kamijo',    text: '……それは、まあ……\nでも田中さんのコートでしたよ。', bg: 'courtroom_witness', center: 'kamijo', centerPose: 'nervous' },
-        { speaker: 'maya',      text: '（コートで人を特定するの？\n　それって証言になるの？）', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'normal' },
+        { speaker: 'maya',      text: '（コートで人を特定するの？\n　それって証言になるの？）', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'normal', right: 'maya', rightPose: 'worried' },
       ],
       contradicts: null,
     },
@@ -381,7 +389,7 @@ const CROSSEXAM = {
         { speaker: 'phoenix',   text: 'その「物音」について\nもう少し詳しく。', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'normal' },
         { speaker: 'kamijo',    text: '「ガタン」という音でした。\n棚から物が落ちたような……', bg: 'courtroom_witness', center: 'kamijo', centerPose: 'normal' },
         { speaker: 'phoenix',   text: '深夜0時の物音……\n被害者の死亡推定時刻は22時〜23時です。', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'think' },
-        { speaker: 'maya',      text: '（時間がずれてる！\n　真犯人が何かを持ち出したの？）', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'normal' },
+        { speaker: 'maya',      text: '（時間がずれてる！\n　真犯人が何かを持ち出したの？）', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'normal', right: 'maya', rightPose: 'excited' },
       ],
       contradicts: null,
     },
@@ -394,7 +402,7 @@ const CROSSEXAM = {
         { speaker: 'edgeworth', text: '異議あり！', bg: 'courtroom_prosecution', right: 'edgeworth', rightPose: 'point', anim: 'objection' },
         { speaker: 'edgeworth', text: 'エレベーター記録は\n既に検察が証拠として押収しています。', bg: 'courtroom_prosecution', right: 'edgeworth', rightPose: 'normal' },
         { speaker: 'judge',     text: 'むむ……では弁護側は\n手元の証拠で戦うしかありませんね。', bg: 'courtroom_judge', center: 'judge', centerPose: 'normal' },
-        { speaker: 'maya',      text: '（でも私たちも同じ記録の写しを\n　持ってるよね？）', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'think' },
+        { speaker: 'maya',      text: '（でも私たちも同じ記録の写しを\n　持ってるよね？）', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'think', right: 'maya', rightPose: 'normal' },
       ],
       contradicts: null,
     },
