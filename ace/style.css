@@ -1,0 +1,764 @@
+/* ===== リセット & ベース ===== */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: #0a0a0f;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  font-family: 'Hiragino Kaku Gothic Pro', 'Yu Gothic', 'Meiryo', sans-serif;
+  overflow: hidden;
+}
+
+/* ===== ゲームコンテナ（800×480 固定比率） ===== */
+#game-wrap {
+  position: relative;
+  width: min(100vw, calc(100vh * 800 / 480));
+  max-width: 100vw;
+}
+#game-wrap::before {
+  content: '';
+  display: block;
+  padding-top: 60%; /* 480/800 */
+}
+#game {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  user-select: none;
+  cursor: pointer;
+}
+
+/* ===== 背景レイヤー ===== */
+#bg {
+  position: absolute;
+  inset: 0;
+  transition: background-image 0.1s, background-color 0.3s;
+  background-size: cover;
+  background-position: center;
+}
+
+/* CSS製背景テーマ（画像がない場合のフォールバック） */
+#bg.bg-courtroom-wide {
+  background: linear-gradient(180deg,
+    #1a0f05 0%,
+    #3d1f0a 15%,
+    #5c3010 30%,
+    #4a2808 60%,
+    #2e1805 100%
+  );
+  box-shadow: inset 0 0 80px rgba(0,0,0,0.7);
+}
+#bg.bg-courtroom-wide::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(90deg, transparent, transparent 59px, rgba(0,0,0,0.15) 60px),
+    linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(0,0,0,0.5) 100%);
+}
+
+#bg.bg-courtroom-judge {
+  background: linear-gradient(180deg,
+    #0d0808 0%,
+    #2a1208 20%,
+    #4e2510 40%,
+    #3a1c0c 70%,
+    #1e0e06 100%
+  );
+}
+#bg.bg-courtroom-judge::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 60% 40% at 50% 30%, rgba(255,200,100,0.15) 0%, transparent 70%);
+}
+
+#bg.bg-courtroom-defense {
+  background: linear-gradient(160deg,
+    #060d1a 0%,
+    #0d1f3c 25%,
+    #152d50 50%,
+    #0d1f3c 75%,
+    #060d1a 100%
+  );
+}
+
+#bg.bg-courtroom-prosecution {
+  background: linear-gradient(200deg,
+    #1a0606 0%,
+    #3c0d0d 25%,
+    #502015 50%,
+    #3c0d0d 75%,
+    #1a0606 100%
+  );
+}
+
+#bg.bg-courtroom-witness {
+  background: linear-gradient(180deg,
+    #0a0a14 0%,
+    #1a1a2e 30%,
+    #252540 60%,
+    #1a1a2e 100%
+  );
+}
+#bg.bg-courtroom-witness::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 70% 50% at 50% 60%, rgba(60,60,100,0.3) 0%, transparent 70%);
+}
+
+#bg.bg-corridor {
+  background: linear-gradient(180deg,
+    #0c0c10 0%,
+    #1a1a28 40%,
+    #141420 100%
+  );
+}
+#bg.bg-corridor::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(90deg, transparent, transparent 79px, rgba(255,255,255,0.03) 80px),
+    linear-gradient(180deg, rgba(100,100,180,0.1) 0%, transparent 60%);
+}
+
+#bg.bg-black { background: #000; }
+
+/* ===== キャラクタースプライト ===== */
+#char-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.char-slot {
+  position: absolute;
+  bottom: 125px;
+  width: 220px;
+  height: 320px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+#char-left  { left: 20px; }
+#char-right { right: 20px; }
+.char-center-slot {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.char-sprite {
+  width: 100%;
+  height: 100%;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: bottom center;
+  position: relative;
+  transition: opacity 0.2s;
+}
+.char-sprite.hidden { opacity: 0; }
+
+/* プレースホルダー（画像がない場合） */
+.char-sprite::before {
+  content: attr(data-label);
+  display: block;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 140px;
+  padding: 6px 4px 8px;
+  background: var(--char-color, #333);
+  border-radius: 6px 6px 0 0;
+  color: #fff;
+  font-size: 11px;
+  font-weight: bold;
+  text-align: center;
+  white-space: pre-line;
+  line-height: 1.4;
+  pointer-events: none;
+}
+.char-sprite::after {
+  content: '';
+  display: block;
+  position: absolute;
+  bottom: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 130px;
+  background: var(--char-color, #333);
+  border-radius: 40px 40px 10px 10px;
+  opacity: 0.85;
+}
+/* 画像がセットされていたらプレースホルダー非表示 */
+.char-sprite[style*="background-image"]::before,
+.char-sprite[style*="background-image"]::after { display: none; }
+
+/* キャラ別プレースホルダーカラー */
+.char-sprite[data-char="phoenix"]   { --char-color: #1a3a8f; }
+.char-sprite[data-char="maya"]      { --char-color: #6a2d8f; }
+.char-sprite[data-char="edgeworth"] { --char-color: #8f1a1a; }
+.char-sprite[data-char="judge"]     { --char-color: #5a5a40; }
+.char-sprite[data-char="kamijo"]    { --char-color: #2a4a3a; }
+.char-sprite[data-char="none"]::before,
+.char-sprite[data-char="none"]::after { display: none; }
+
+/* ===== 心証バー ===== */
+#health-container {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  z-index: 30;
+}
+#health-label {
+  color: #ccc;
+  font-size: 11px;
+  white-space: nowrap;
+}
+#health-bar-bg {
+  width: 120px;
+  height: 14px;
+  background: #1a1a1a;
+  border: 1px solid #444;
+  border-radius: 3px;
+  overflow: hidden;
+}
+#health-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #2ecc40, #a4e040);
+  transition: width 0.4s ease-out, background 0.3s;
+  border-radius: 3px;
+}
+#health-fill.damage {
+  background: linear-gradient(90deg, #e74c3c, #ff6b35);
+}
+
+/* ===== シーンラベル ===== */
+#scene-label {
+  position: absolute;
+  top: 30%;
+  left: 0;
+  right: 0;
+  text-align: center;
+  color: #ddd;
+  font-size: 15px;
+  letter-spacing: 0.15em;
+  text-shadow: 0 0 10px rgba(255,255,255,0.4);
+  z-index: 40;
+  pointer-events: none;
+}
+
+/* ===== 証言ボックス ===== */
+#testimony-area {
+  position: absolute;
+  top: 8px;
+  left: 10px;
+  right: 140px;
+  background: rgba(0, 30, 60, 0.92);
+  border: 2px solid #2a6a9a;
+  border-radius: 4px;
+  padding: 8px 10px 6px;
+  z-index: 25;
+}
+#testimony-header {
+  color: #7ac4ff;
+  font-size: 11px;
+  margin-bottom: 4px;
+  letter-spacing: 0.1em;
+}
+#testimony-text {
+  color: #fff;
+  font-size: 14px;
+  line-height: 1.5;
+  min-height: 42px;
+}
+#testimony-nav {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 5px;
+}
+.nav-btn {
+  background: #0a3a5a;
+  color: #aaddff;
+  border: 1px solid #2a6a9a;
+  border-radius: 3px;
+  padding: 2px 10px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.nav-btn:hover { background: #1a5a8a; }
+#testimony-counter {
+  color: #7ac4ff;
+  font-size: 11px;
+  min-width: 30px;
+  text-align: center;
+}
+
+/* ===== 台詞ボックス ===== */
+#dialogue-box {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 120px;
+  background: rgba(4, 8, 20, 0.92);
+  border-top: 2px solid #2a5a2a;
+  padding: 6px 14px 8px;
+  z-index: 20;
+}
+#speaker-name-wrap {
+  min-height: 22px;
+  margin-bottom: 4px;
+}
+#speaker-name {
+  display: inline-block;
+  padding: 2px 12px;
+  font-size: 13px;
+  font-weight: bold;
+  border-radius: 2px;
+  letter-spacing: 0.08em;
+}
+/* スピーカー別カラー */
+#speaker-name.spk-judge     { background: #4a3000; color: #ffd700; }
+#speaker-name.spk-edgeworth { background: #500000; color: #ffaaaa; }
+#speaker-name.spk-phoenix   { background: #001850; color: #aaddff; }
+#speaker-name.spk-maya      { background: #300050; color: #ddaaff; }
+#speaker-name.spk-kamijo    { background: #0a2a1a; color: #aaffcc; }
+#speaker-name.spk-narration { background: transparent; color: transparent; font-size: 0; }
+#speaker-name.spk-system    { background: #1a1a1a; color: #888; }
+
+#dialogue-text {
+  color: #f0f0f0;
+  font-size: 16px;
+  line-height: 1.6;
+  min-height: 52px;
+}
+#dialogue-text.narration-style {
+  color: #c8c8c8;
+  font-style: italic;
+  font-size: 14px;
+}
+#dialogue-text.system-style {
+  color: #aaa;
+  font-size: 14px;
+  text-align: center;
+  margin-top: 8px;
+}
+#next-indicator {
+  position: absolute;
+  bottom: 7px;
+  right: 14px;
+  color: #4a9a4a;
+  font-size: 14px;
+  animation: blink 0.9s infinite;
+}
+
+/* ===== アクションボタン ===== */
+#action-btns {
+  position: absolute;
+  bottom: 125px;
+  right: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  z-index: 30;
+}
+#action-btns button {
+  width: 90px;
+  padding: 8px 4px;
+  font-size: 13px;
+  font-weight: bold;
+  border-radius: 4px;
+  cursor: pointer;
+  letter-spacing: 0.1em;
+  transition: filter 0.15s, transform 0.1s;
+}
+#action-btns button:hover  { filter: brightness(1.2); transform: scale(1.04); }
+#action-btns button:active { transform: scale(0.97); }
+#btn-press {
+  background: linear-gradient(180deg, #1a6a1a, #0d3d0d);
+  color: #90ee90;
+  border: 1px solid #3a9a3a;
+}
+#btn-present {
+  background: linear-gradient(180deg, #6a1a1a, #3d0d0d);
+  color: #ffaaaa;
+  border: 1px solid #9a3a3a;
+}
+
+/* ===== 証拠品メニュー ===== */
+#evidence-menu {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 15, 0.95);
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+}
+#evidence-menu-header {
+  color: #7ac4ff;
+  font-size: 13px;
+  font-weight: bold;
+  letter-spacing: 0.15em;
+  text-align: center;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #1a4a6a;
+  margin-bottom: 8px;
+}
+#evidence-layout {
+  flex: 1;
+  display: flex;
+  gap: 10px;
+  overflow: hidden;
+}
+#evidence-list {
+  width: 200px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.evidence-item {
+  padding: 7px 10px;
+  background: #0a1a2a;
+  border: 1px solid #1a3a5a;
+  border-radius: 3px;
+  color: #ccc;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.evidence-item:hover  { background: #0d2a3e; border-color: #2a6a9a; color: #fff; }
+.evidence-item.selected { background: #0d3a5a; border-color: #4a9acd; color: #fff; }
+.evidence-item-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 3px;
+  background: #1a2a3a;
+  background-size: cover;
+  background-position: center;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+#evidence-detail {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+#evidence-img-wrap {
+  flex: 1;
+  background: #050d18;
+  border: 1px solid #1a3a5a;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#evidence-img {
+  width: 140px;
+  height: 140px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 60px;
+}
+#evidence-info { min-height: 60px; }
+#evidence-name-detail {
+  color: #7ac4ff;
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+#evidence-desc-detail {
+  color: #aaa;
+  font-size: 12px;
+  line-height: 1.5;
+}
+#evidence-footer {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  padding-top: 8px;
+  border-top: 1px solid #1a4a6a;
+}
+#evidence-footer button {
+  padding: 7px 24px;
+  font-size: 13px;
+  font-weight: bold;
+  border-radius: 4px;
+  cursor: pointer;
+  letter-spacing: 0.1em;
+  transition: filter 0.15s;
+}
+#evidence-footer button:hover { filter: brightness(1.2); }
+#btn-evidence-present {
+  background: linear-gradient(180deg, #6a1a1a, #3d0d0d);
+  color: #ffaaaa;
+  border: 1px solid #9a3a3a;
+}
+#btn-evidence-present.disabled {
+  background: #1a1a1a;
+  color: #555;
+  border-color: #333;
+  cursor: not-allowed;
+  filter: none !important;
+}
+#btn-evidence-close {
+  background: linear-gradient(180deg, #1a1a3a, #0d0d20);
+  color: #aaa;
+  border: 1px solid #3a3a6a;
+}
+
+/* ===== フラッシュ演出 ===== */
+#flash-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 80;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+  pointer-events: none;
+}
+#flash-portrait {
+  width: 200px;
+  height: 280px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: bottom center;
+  position: absolute;
+  bottom: 0;
+  left: 20px;
+}
+/* フラッシュ時のポートレートプレースホルダー */
+#flash-portrait[data-char]::before {
+  content: attr(data-label);
+  display: block;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  padding: 4px;
+  background: var(--char-color, #333);
+  border-radius: 4px 4px 0 0;
+  color: #fff;
+  font-size: 10px;
+  text-align: center;
+}
+#flash-portrait[data-char]::after {
+  content: '';
+  display: block;
+  position: absolute;
+  bottom: 35px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 70px;
+  height: 110px;
+  background: var(--char-color, #333);
+  border-radius: 35px 35px 8px 8px;
+  opacity: 0.9;
+}
+#flash-portrait[data-char="phoenix"]   { --char-color: #1a3a8f; }
+#flash-portrait[data-char="edgeworth"] { --char-color: #8f1a1a; }
+#flash-portrait[data-char="kamijo"]    { --char-color: #2a4a3a; }
+#flash-portrait[style*="background-image"]::before,
+#flash-portrait[style*="background-image"]::after { display: none; }
+
+#flash-text-wrap {
+  position: absolute;
+  right: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#flash-text {
+  font-size: 52px;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  text-shadow: 3px 3px 0 #000, -1px -1px 0 #000;
+  line-height: 1;
+}
+
+/* フラッシュ演出アニメーション */
+.flash-objection {
+  background: linear-gradient(135deg, #1a0000, #3a0000, #8a0000, #c00) !important;
+  animation: flash-bg-anim 0.5s ease-out;
+}
+.flash-objection #flash-text {
+  color: #fff;
+  text-shadow: 3px 3px 0 #600, -1px -1px 0 #600, 0 0 20px rgba(255,100,100,0.8);
+  animation: text-pop 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+}
+.flash-hold-it {
+  background: linear-gradient(135deg, #000a1a, #001a3a, #003a8a, #0055cc) !important;
+  animation: flash-bg-anim 0.5s ease-out;
+}
+.flash-hold-it #flash-text {
+  color: #fff;
+  text-shadow: 3px 3px 0 #004, -1px -1px 0 #004, 0 0 20px rgba(100,150,255,0.8);
+  animation: text-pop 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+}
+.flash-take-that {
+  background: linear-gradient(135deg, #0a1a00, #1a3a00, #3a8a00, #66cc00) !important;
+  animation: flash-bg-anim 0.5s ease-out;
+}
+.flash-take-that #flash-text {
+  color: #fff;
+  text-shadow: 3px 3px 0 #040, -1px -1px 0 #040, 0 0 20px rgba(100,255,100,0.8);
+  animation: text-pop 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+}
+
+/* ===== ゲームオーバー ===== */
+#gameover-screen {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.92);
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#gameover-inner { text-align: center; }
+#gameover-title {
+  color: #cc2200;
+  font-size: 36px;
+  font-weight: 900;
+  letter-spacing: 0.2em;
+  margin-bottom: 16px;
+  text-shadow: 0 0 20px rgba(200,50,0,0.5);
+}
+#gameover-msg {
+  color: #aaa;
+  font-size: 14px;
+  line-height: 1.8;
+  margin-bottom: 24px;
+}
+#btn-retry {
+  padding: 10px 36px;
+  background: linear-gradient(180deg, #6a1a1a, #3d0d0d);
+  color: #ffaaaa;
+  border: 1px solid #9a3a3a;
+  border-radius: 4px;
+  font-size: 15px;
+  font-weight: bold;
+  letter-spacing: 0.15em;
+  cursor: pointer;
+  transition: filter 0.15s;
+}
+#btn-retry:hover { filter: brightness(1.3); }
+
+/* ===== タイトル画面 ===== */
+#title-screen {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #000005 0%, #050510 40%, #000010 100%);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#title-inner { text-align: center; }
+#title-sub {
+  color: #556;
+  font-size: 12px;
+  letter-spacing: 0.3em;
+  margin-bottom: 10px;
+}
+#title-main {
+  color: #ddeeff;
+  font-size: 48px;
+  font-weight: 900;
+  letter-spacing: 0.2em;
+  text-shadow: 0 0 30px rgba(100,160,255,0.5), 0 0 60px rgba(100,160,255,0.2);
+  margin-bottom: 6px;
+}
+#title-case {
+  color: #8899bb;
+  font-size: 18px;
+  letter-spacing: 0.2em;
+  margin-bottom: 36px;
+}
+#btn-start {
+  padding: 12px 48px;
+  background: linear-gradient(180deg, #1a3a7a, #0d1f4a);
+  color: #aaddff;
+  border: 1px solid #3a6aaa;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: bold;
+  letter-spacing: 0.3em;
+  cursor: pointer;
+  transition: filter 0.2s, transform 0.15s;
+  animation: pulse-border 2s infinite;
+}
+#btn-start:hover { filter: brightness(1.4); transform: scale(1.05); }
+
+/* ===== ユーティリティ ===== */
+.hidden { display: none !important; }
+
+/* ===== アニメーション ===== */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+@keyframes flash-bg-anim {
+  0%   { opacity: 0; }
+  20%  { opacity: 1; }
+  100% { opacity: 1; }
+}
+@keyframes text-pop {
+  0%   { transform: scale(0.3) rotate(-5deg); opacity: 0; }
+  70%  { transform: scale(1.1) rotate(1deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+@keyframes pulse-border {
+  0%, 100% { box-shadow: 0 0 8px rgba(100,160,255,0.3); }
+  50%       { box-shadow: 0 0 18px rgba(100,160,255,0.7); }
+}
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  15%       { transform: translateX(-8px); }
+  30%       { transform: translateX(8px); }
+  45%       { transform: translateX(-6px); }
+  60%       { transform: translateX(6px); }
+  75%       { transform: translateX(-4px); }
+  90%       { transform: translateX(4px); }
+}
+@keyframes damage-flash {
+  0%, 100% { background: inherit; }
+  30%       { background: rgba(200,0,0,0.35); }
+}
+@keyframes slide-in-right {
+  from { transform: translateX(60px); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes testimony-update {
+  0%   { background: rgba(255,255,100,0.2); }
+  100% { background: transparent; }
+}
