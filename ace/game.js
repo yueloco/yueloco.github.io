@@ -428,15 +428,18 @@ class AceGame {
     this._cacheEls();
     this._bindEvents();
     this._renderHealth();
-    this._rescale();
+    /* レイアウト確定後にスケール計算するため rAF を使う */
+    requestAnimationFrame(() => this._rescale());
     window.addEventListener('resize', () => this._rescale());
   }
 
   /* ---- ゲーム画面スケール（800×480 を画面サイズに合わせて拡縮） ---- */
   _rescale() {
-    const wrap  = document.getElementById('game-wrap');
-    const scale = wrap.clientWidth / 800;
-    document.getElementById('game').style.transform = `scale(${scale})`;
+    const wrap = document.getElementById('game-wrap');
+    const w = wrap.clientWidth;
+    if (w > 0) {
+      document.getElementById('game').style.transform = `scale(${w / 800})`;
+    }
   }
 
   /* ---- DOM参照 ---- */
