@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>逆転裁判 ― 消えた証言</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="game-wrap">
+    <div id="game">
+
+      <!-- 背景レイヤー -->
+      <div id="bg"></div>
+
+      <!-- キャラクタースプライト -->
+      <div id="char-layer">
+        <div id="char-left"  class="char-slot"><div class="char-sprite" id="sprite-left"></div></div>
+        <div id="char-right" class="char-slot"><div class="char-sprite" id="sprite-right"></div></div>
+        <div id="char-center" class="char-slot char-center-slot"><div class="char-sprite" id="sprite-center"></div></div>
+      </div>
+
+      <!-- 心証バー（反対尋問中のみ表示） -->
+      <div id="health-container" class="hidden">
+        <span id="health-label">心証</span>
+        <div id="health-bar-bg">
+          <div id="health-fill"></div>
+        </div>
+      </div>
+
+      <!-- シーンラベル -->
+      <div id="scene-label" class="hidden"></div>
+
+      <!-- 証言ボックス（反対尋問中のみ） -->
+      <div id="testimony-area" class="hidden">
+        <div id="testimony-header">
+          <span id="testimony-witness-name"></span>の証言
+        </div>
+        <div id="testimony-text"></div>
+        <div id="testimony-nav">
+          <button id="btn-prev" class="nav-btn">◀</button>
+          <span id="testimony-counter"></span>
+          <button id="btn-next" class="nav-btn">▶</button>
+        </div>
+      </div>
+
+      <!-- 台詞ボックス -->
+      <div id="dialogue-box">
+        <div id="speaker-name-wrap"><span id="speaker-name"></span></div>
+        <div id="dialogue-text"></div>
+        <div id="next-indicator">▼</div>
+      </div>
+
+      <!-- アクションボタン（反対尋問中） -->
+      <div id="action-btns" class="hidden">
+        <button id="btn-press">尋　問</button>
+        <button id="btn-present">証拠提出</button>
+      </div>
+
+      <!-- 証拠品メニュー -->
+      <div id="evidence-menu" class="hidden">
+        <div id="evidence-menu-header">証拠品・プロフィール</div>
+        <div id="evidence-layout">
+          <div id="evidence-list"></div>
+          <div id="evidence-detail">
+            <div id="evidence-img-wrap">
+              <div id="evidence-img"></div>
+            </div>
+            <div id="evidence-info">
+              <div id="evidence-name-detail"></div>
+              <div id="evidence-desc-detail"></div>
+            </div>
+          </div>
+        </div>
+        <div id="evidence-footer">
+          <button id="btn-evidence-present" class="disabled">提　出</button>
+          <button id="btn-evidence-close">閉じる</button>
+        </div>
+      </div>
+
+      <!-- フラッシュ演出オーバーレイ -->
+      <div id="flash-overlay" class="hidden">
+        <div id="flash-portrait"></div>
+        <div id="flash-text-wrap">
+          <div id="flash-text"></div>
+        </div>
+      </div>
+
+      <!-- ゲームオーバー -->
+      <div id="gameover-screen" class="hidden">
+        <div id="gameover-inner">
+          <div id="gameover-title">審理失敗</div>
+          <div id="gameover-msg">証拠の提出を誤り、裁判長の心証が悪化した。<br>もう一度やり直しますか？</div>
+          <button id="btn-retry">もう一度</button>
+        </div>
+      </div>
+
+      <!-- タイトル画面 -->
+      <div id="title-screen">
+        <div id="title-inner">
+          <div id="title-sub">ビジュアルノベル</div>
+          <div id="title-main">逆転裁判</div>
+          <div id="title-case">― 消えた証言 ―</div>
+          <button id="btn-start">開　廷</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <script src="game.js"></script>
+</body>
+</html>
