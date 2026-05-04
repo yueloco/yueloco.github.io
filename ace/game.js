@@ -448,12 +448,26 @@ class AudioEngine {
   }
 
   resume() {
-    if (this.ctx?.state === 'suspended') this.ctx.resume();
+    if (this.ctx?.state === 'suspended') return this.ctx.resume();
+    return Promise.resolve();
+  }
+
+  _ensureRunning(fn) {
+    if (!this.enabled) return;
+    if (this.ctx.state === 'suspended') {
+      this.ctx.resume().then(fn);
+    } else {
+      fn();
+    }
   }
 
   /* ---- SE ---- */
   sfx(name) {
     if (!this.enabled) return;
+    this._ensureRunning(() => this._sfxNow(name));
+  }
+
+  _sfxNow(name) {
     ({
       objection: () => this._chord([261.6, 329.6, 392, 523.3], 'sawtooth', 0.14, 0.7),
       hold_it:   () => this._chord([293.7, 370, 440, 587.3],   'sawtooth', 0.14, 0.7),
@@ -477,8 +491,11 @@ class AudioEngine {
     this._stopBgm();
     this._bgmType   = type;
     this._bgmActive = true;
-    if (type === 'court')     this._courtBgm();
-    if (type === 'crossexam') this._crossExamBgm();
+    this._ensureRunning(() => {
+      if (!this._bgmActive) return;
+      if (type === 'court')     this._courtBgm();
+      if (type === 'crossexam') this._crossExamBgm();
+    });
   }
 
   _stopBgm() {
