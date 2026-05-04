@@ -11,7 +11,9 @@ body {
   overflow: hidden;
 }
 
-/* ===== ゲームコンテナ（800×480 固定比率） ===== */
+/* ===== ゲームコンテナ
+   #game は常に 800×480 の固定サイズで描画し、
+   JS で transform: scale() して画面にフィットさせる ===== */
 #game-wrap {
   position: relative;
   width: min(100vw, calc(100vh * 800 / 480));
@@ -24,7 +26,11 @@ body {
 }
 #game {
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
+  width: 800px;
+  height: 480px;
+  transform-origin: top left;
   overflow: hidden;
   user-select: none;
   cursor: pointer;
