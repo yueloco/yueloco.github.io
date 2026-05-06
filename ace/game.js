@@ -48,12 +48,26 @@ const IMAGES = {
       breakdown: 'img/char/kamijo_breakdown.png',
       lying:     'img/char/kamijo_lying.png',
     },
+    misaki: {
+      normal:    'img/char/misaki_normal.png',
+    },
+    kimura: {
+      normal:    'img/char/kimura_normal.png',
+      nervous:   'img/char/kimura_nervous.png',
+      surprised: 'img/char/kimura_surprised.png',
+      breakdown: 'img/char/kimura_breakdown.png',
+      lying:     'img/char/kimura_lying.png',
+    },
   },
   evidence: {
     autopsy:      'img/evidence/autopsy.png',
     elevator_log: 'img/evidence/elevator_log.png',
     work_log:     'img/evidence/work_log.png',
     security_cam: 'img/evidence/security_cam.png',
+    knife:        'img/evidence/knife.png',
+    alibi_card:   'img/evidence/alibi_card.png',
+    mansion_cam:  'img/evidence/mansion_cam.png',
+    diary:        'img/evidence/diary.png',
   },
   ui: {
     objection: 'img/ui/objection.png',
@@ -73,28 +87,53 @@ const IMAGES = {
    ================================================================ */
 const EVIDENCE_DATA = {
   autopsy: {
-    id: 'autopsy',
+    id: 'autopsy', case: 1,
     name: '検死報告書',
     icon: '📋',
     desc: '被害者・山本隆の検死報告書。\n死亡推定時刻：22:00〜23:00。\n鈍器による後頭部への一撃が致死原因。',
   },
   elevator_log: {
-    id: 'elevator_log',
+    id: 'elevator_log', case: 1,
     name: 'エレベーター記録',
     icon: '🗒️',
     desc: '当日のエレベーター運行記録（写し）。\n22:20 → 8階行き\n23:05 → 1階行き\n※オリジナルは検察が押収',
   },
   work_log: {
-    id: 'work_log',
+    id: 'work_log', case: 1,
     name: '勤怠記録',
     icon: '🕐',
     desc: '被告・田中浩二の当日の勤怠記録。\n退社打刻：21:03\n警備員の署名あり。',
   },
   security_cam: {
-    id: 'security_cam',
+    id: 'security_cam', case: 1,
     name: '防犯カメラ映像',
     icon: '📷',
     desc: '1Fエントランスの防犯カメラ映像。\n21:05、田中に見える人物が\nビルを出る姿が確認できる。',
+  },
+  /* ---- 第2話の証拠 ---- */
+  knife: {
+    id: 'knife', case: 2,
+    name: '凶器の包丁',
+    icon: '🔪',
+    desc: '現場で発見された刃渡り18cmの包丁。\n被告・中村美咲の指紋は\n柄の部分から検出されていない。',
+  },
+  alibi_card: {
+    id: 'alibi_card', case: 2,
+    name: '社員証ログ',
+    icon: '🪪',
+    desc: '中村美咲の入退館記録。\n3月20日 入館：18:00\n　　　　退館：19:25\n会社のセキュリティゲート記録。',
+  },
+  mansion_cam: {
+    id: 'mansion_cam', case: 2,
+    name: 'マンション防犯映像',
+    icon: '🎥',
+    desc: 'マンション玄関の防犯カメラ映像。\n18:42、証人・木村が外出。\n18:55、証人・木村が帰宅。\n美咲の帰宅は19:30。',
+  },
+  diary: {
+    id: 'diary', case: 2,
+    name: '高橋拓海の日記',
+    icon: '📔',
+    desc: '被害者・高橋拓海の私的な日記。\n「最近、美咲が誰かに尾けられている。\n　隣人の様子もおかしい。一度問い詰めるか」\nと記載がある。',
   },
 };
 
@@ -107,6 +146,8 @@ const CHARS = {
   edgeworth: { id: 'edgeworth', label: '御剣 怜侍\n（検察官）',    spkClass: 'spk-edgeworth', spkName: '御剣 怜侍' },
   judge:     { id: 'judge',     label: '裁判長',                   spkClass: 'spk-judge',     spkName: '裁判長' },
   kamijo:    { id: 'kamijo',    label: '上条 京介\n（証人）',       spkClass: 'spk-kamijo',    spkName: '上条 京介' },
+  misaki:    { id: 'misaki',    label: '中村 美咲\n（被告人）',     spkClass: 'spk-misaki',    spkName: '中村 美咲' },
+  kimura:    { id: 'kimura',    label: '木村 真一\n（証人）',       spkClass: 'spk-kimura',    spkName: '木村 真一' },
   narration: { id: 'none',      label: '',                         spkClass: 'spk-narration', spkName: '' },
   system:    { id: 'none',      label: '',                         spkClass: 'spk-system',    spkName: '―' },
 };
@@ -646,8 +687,299 @@ SCENES['ending'] = [
     speaker: 'narration', bg: 'black',
     text: '成歩堂 龍一の、長い戦いは\nまだ始まったばかりだ――',
   },
+  {
+    speaker: 'narration', bg: 'black',
+    text: '―― 第1話　完 ――\n\n　　　…',
+  },
+  { type: 'scene_label', text: '― そして、数ヶ月後 ―', bg: 'black', goto: 'case2_opening', setCase: 2 },
+];
+
+/* ================================================================
+   第2話「沈黙のアリバイ」
+   ================================================================ */
+
+SCENES['case2_opening'] = [
+  { type: 'scene_label', text: '第2話\n沈黙のアリバイ', bg: 'black', goto: 'case2_brief' },
+];
+
+SCENES['case2_brief'] = [
+  {
+    speaker: 'narration', bg: 'black',
+    text: '3月20日　夜――\nとあるマンションの一室で、\n若い男性が刺殺された。',
+  },
+  {
+    speaker: 'narration', bg: 'black',
+    text: '逮捕されたのは、被害者の婚約者。\n勤め先から戻ったばかりの女性、中村美咲。',
+  },
+  {
+    speaker: 'narration', bg: 'black',
+    text: 'そして弁護人は、再び——\n成歩堂 龍一。',
+  },
+  { type: 'scene_label', text: '第1日　午前9時\n地方裁判所 第3法廷', bg: 'black', goto: 'case2_court' },
+];
+
+SCENES['case2_court'] = [
+  {
+    speaker: 'judge', bg: 'courtroom_judge', center: 'judge', centerPose: 'normal',
+    text: '本日、中村美咲被告人に対する\n殺人事件の公判を開廷します。',
+  },
+  {
+    speaker: 'judge', bg: 'courtroom_judge', center: 'judge', centerPose: 'normal',
+    text: '弁護人、被告人は\n冒頭陳述を行いますか。',
+  },
+  {
+    speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'confident',
+    right: 'maya', rightPose: 'normal',
+    text: 'はい、裁判長。\n被告人・中村美咲は無実です。',
+  },
+  {
+    speaker: 'edgeworth', bg: 'courtroom_prosecution', right: 'edgeworth', rightPose: 'smirk',
+    text: '……ふん、また君か、成歩堂。',
+  },
+  {
+    speaker: 'edgeworth', bg: 'courtroom_prosecution', right: 'edgeworth', rightPose: 'point',
+    text: '今回は明確な目撃証言がある。\n簡単には覆らんぞ。',
+  },
+  {
+    speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'normal',
+    right: 'maya', rightPose: 'happy',
+    text: '（御剣……あの一件以来、\n　彼の目つきが少し変わった気がする）',
+  },
+  {
+    speaker: 'maya', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'normal',
+    right: 'maya', rightPose: 'worried',
+    text: '成歩堂くん、美咲さん\n本当に犯人じゃないんだよね？',
+  },
+  {
+    speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'confident',
+    right: 'maya', rightPose: 'normal',
+    text: 'ああ。彼女には\nアリバイがある——必ずだ。',
+  },
+  {
+    speaker: 'judge', bg: 'courtroom_judge', center: 'judge', centerPose: 'normal',
+    text: '検察、証人を呼んでください。',
+  },
+  {
+    speaker: 'edgeworth', bg: 'courtroom_prosecution', right: 'edgeworth', rightPose: 'normal',
+    text: '本件唯一の目撃者を召喚します。\n被告人のマンションの隣人——木村 真一氏。',
+  },
+  {
+    speaker: 'kimura', bg: 'courtroom_witness', center: 'kimura', centerPose: 'normal',
+    text: '……木村 真一です。\n真実のみを述べると誓います。',
+  },
+  {
+    speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'think',
+    text: '（妙に落ち着いてる……\n　慣れているような口ぶりだ）',
+  },
+  {
+    speaker: 'edgeworth', bg: 'courtroom_prosecution', right: 'edgeworth', rightPose: 'normal',
+    text: '証人、3月20日の夜の\n状況を証言してください。',
+    goto: 'case2_testimony',
+  },
+];
+
+SCENES['case2_testimony'] = [
+  {
+    speaker: 'system', bg: 'courtroom_witness', center: 'kimura', centerPose: 'normal',
+    text: '＜証言＞　木村 真一の証言が始まります。',
+  },
+  { type: 'crossexam_start', ceData: 'crossexam3' },
+];
+
+SCENES['case2_after_contradiction'] = [
+  {
+    speaker: 'kimura', bg: 'courtroom_witness', center: 'kimura', centerPose: 'nervous',
+    text: 'そ、それは……\nなにかの間違いだ……！',
+  },
+  {
+    speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'point',
+    text: '間違いではありません。\n会社のセキュリティゲートは\n社員証なしには通過できない。',
+  },
+  {
+    speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'point',
+    text: '美咲さんは19:25まで会社にいた。\n18:50に部屋にいるはずがないんです！',
+  },
+  {
+    speaker: 'judge', bg: 'courtroom_judge', center: 'judge', centerPose: 'surprised',
+    text: 'な……なんと！\n証人、これは事実ですか！？',
+  },
+  {
+    speaker: 'kimura', bg: 'courtroom_witness', center: 'kimura', centerPose: 'lying',
+    text: '……見間違えただけです！\n暗かったから……！',
+  },
+  {
+    speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'point',
+    right: 'maya', rightPose: 'excited',
+    anim: 'objection',
+    text: 'マンションの防犯映像によれば、\n18:42に外出したのは——あなただ！',
+  },
+  {
+    speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'point',
+    text: 'そして帰宅は18:55。\nその間の13分間、\nあなたはどこで何をしていた？',
+  },
+  {
+    speaker: 'kimura', bg: 'courtroom_witness', center: 'kimura', centerPose: 'nervous',
+    text: 'う……うぅ……',
+  },
+  {
+    speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'point',
+    text: 'さらに——被害者・高橋拓海の日記です。',
+  },
+  {
+    speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'normal',
+    text: '「美咲が誰かに尾けられている。\n　隣人の様子もおかしい。\n　一度問い詰めるか」と。',
+  },
+  {
+    speaker: 'edgeworth', bg: 'courtroom_prosecution', right: 'edgeworth', rightPose: 'thinking',
+    text: '（証人は被告人を\n　ストーキングしていた……\n　そして被害者に発覚しかけた）',
+  },
+  {
+    speaker: 'kimura', bg: 'courtroom_witness', center: 'kimura', centerPose: 'breakdown',
+    text: 'ぐぅぁぁぁぁ！！',
+  },
+  {
+    speaker: 'kimura', bg: 'courtroom_witness', center: 'kimura', centerPose: 'breakdown',
+    text: 'あの男が……あの男が悪いんだ！\n美咲さんから俺を引き離そうとした！',
+  },
+  {
+    speaker: 'kimura', bg: 'courtroom_witness', center: 'kimura', centerPose: 'nervous',
+    text: '部屋に押しかけて……\n口論になって……\n気づいたら、包丁を……！',
+  },
+  {
+    speaker: 'judge', bg: 'courtroom_judge', center: 'judge', centerPose: 'surprised',
+    text: '自……自白！？',
+  },
+  {
+    speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'confident',
+    right: 'maya', rightPose: 'excited',
+    text: '裁判長。被告人・中村美咲は\n全くの無実です。',
+  },
+  {
+    speaker: 'edgeworth', bg: 'courtroom_prosecution', right: 'edgeworth', rightPose: 'normal',
+    text: '……検察は、被告人に対する\n起訴を取り下げます。',
+  },
+  {
+    speaker: 'judge', bg: 'courtroom_judge', center: 'judge', centerPose: 'normal',
+    text: '本件被告・中村美咲に対し、\n無　罪　を言い渡す！',
+  },
+  {
+    speaker: 'narration', bg: 'courtroom_wide',
+    text: '――　閉　廷　――',
+  },
+  { type: 'scene_label', text: '判決後\n法廷の廊下', bg: 'corridor', goto: 'case2_ending' },
+];
+
+SCENES['case2_ending'] = [
+  {
+    speaker: 'misaki', bg: 'corridor', center: 'misaki', centerPose: 'normal',
+    text: '成歩堂先生……本当に、\nありがとうございました。',
+  },
+  {
+    speaker: 'phoenix', bg: 'corridor', left: 'phoenix', leftPose: 'confident',
+    right: 'maya', rightPose: 'happy',
+    text: 'いえ。真実が明らかになって、\n本当によかった。',
+  },
+  {
+    speaker: 'maya', bg: 'corridor', left: 'phoenix', leftPose: 'normal',
+    right: 'maya', rightPose: 'worried',
+    text: '美咲さん、しばらくは\n大変だと思うけど……',
+  },
+  {
+    speaker: 'misaki', bg: 'corridor', center: 'misaki', centerPose: 'normal',
+    text: '……拓海の分まで、\n生きていきます。',
+  },
+  {
+    speaker: 'edgeworth', bg: 'corridor', right: 'edgeworth', rightPose: 'normal',
+    text: '……成歩堂。',
+  },
+  {
+    speaker: 'phoenix', bg: 'corridor', left: 'phoenix', leftPose: 'normal',
+    right: 'edgeworth', rightPose: 'normal',
+    text: '御剣。',
+  },
+  {
+    speaker: 'edgeworth', bg: 'corridor', right: 'edgeworth', rightPose: 'thinking',
+    text: '今回も……君に救われた。\n検察の見立ては甘かった。',
+  },
+  {
+    speaker: 'phoenix', bg: 'corridor', left: 'phoenix', leftPose: 'confident',
+    right: 'edgeworth', rightPose: 'normal',
+    text: '見立てじゃない。真実だ。\nそして真実は——いつだって、\n誰かを救うためにある。',
+  },
+  {
+    speaker: 'edgeworth', bg: 'corridor', right: 'edgeworth', rightPose: 'smirk',
+    text: 'フ……成長したな、成歩堂。',
+  },
+  {
+    speaker: 'narration', bg: 'corridor',
+    text: 'こうして、第2の事件も終わりを告げた。',
+  },
+  {
+    speaker: 'narration', bg: 'black',
+    text: 'だが——\n成歩堂の前に立ちはだかる事件は、\nこれで最後ではない。',
+  },
+  {
+    speaker: 'narration', bg: 'black',
+    text: '正義のために、真実のために。\n新人弁護士・成歩堂 龍一の戦いは、\nまだまだ続く。',
+  },
+  {
+    speaker: 'narration', bg: 'black',
+    text: '―― 第2話　完 ――',
+  },
   { type: 'end' },
 ];
+
+/* ================================================================
+   第3反対尋問データ（第2話）
+   ================================================================ */
+const CROSSEXAM3 = {
+  witnessName: '木村 真一',
+  witnessId:   'kimura',
+  maxHealth:   5,
+  contradictionLines: [
+    { speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'point',
+      text: '社員証ログを見てください！\n美咲さんは18:00から19:25まで\n会社のセキュリティゲート内にいた！' },
+    { speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'point',
+      text: '18:50にマンションへ戻ることは\n絶対に不可能です！' },
+    { speaker: 'kimura', bg: 'courtroom_witness', center: 'kimura', centerPose: 'surprised',
+      text: 'な……！？' },
+  ],
+  nextScene: 'case2_after_contradiction',
+  statements: [
+    /* 0 */
+    {
+      text: '私は18:50頃、\n部屋から出てきた中村さんを見ました。',
+      pressScene: [
+        { speaker: 'phoenix', text: '「18:50」——ずいぶん細かい時刻ですね。\nどうしてその時刻だと？', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'normal' },
+        { speaker: 'kimura',  text: 'ちょうど壁の時計を\n見たところだったので。', bg: 'courtroom_witness', center: 'kimura', centerPose: 'normal' },
+        { speaker: 'phoenix', text: '（即答できる……\n　よほど準備していたか、\n　もしくは……）', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'think' },
+        { speaker: 'maya',    text: '（怪しいよね、成歩堂くん）', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'normal', right: 'maya', rightPose: 'worried' },
+      ],
+      contradicts: null,
+    },
+    /* 1 */
+    {
+      text: '中村さんの服には\n血が付いていました。',
+      pressScene: [
+        { speaker: 'phoenix', text: '血の量は？\nどの部分に？', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'normal' },
+        { speaker: 'kimura',  text: 'え……えっと……\n胸のあたりに、点々と。', bg: 'courtroom_witness', center: 'kimura', centerPose: 'nervous' },
+        { speaker: 'phoenix', text: '（点々……？\n　刺殺なら飛び散るはずだが）', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'think' },
+      ],
+      contradicts: null,
+    },
+    /* 2 ★矛盾 alibi_card */
+    {
+      text: '間違いなく、その時刻に\n中村さんは部屋にいました。',
+      pressScene: [
+        { speaker: 'phoenix', text: '本当に「18:50」で\n間違いないんですか？', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'point', anim: 'hold_it' },
+        { speaker: 'kimura',  text: 'もちろんだ！\n見間違えるはずがない！', bg: 'courtroom_witness', center: 'kimura', centerPose: 'lying' },
+        { speaker: 'phoenix', text: '（彼の証言が崩れれば、\n　美咲さんのアリバイは確実だ）', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'think' },
+      ],
+      contradicts: 'alibi_card',
+      wrongPenalty: 'この証拠では証言の核心を突けない。\nもう一度考えてみてください。',
+    },
+  ],
+};
 
 /* ================================================================
    ゲームエンジン
@@ -879,7 +1211,8 @@ class AceGame {
     this.ceStatements = CROSSEXAM.statements.map(s => ({ ...s }));
 
     /* 証拠品 */
-    this.evidenceList = Object.values(EVIDENCE_DATA);
+    this.currentCase  = 1;
+    this.evidenceList = this._evidenceForCase(1);
     this.audio = new AudioEngine();
     this.selectedEvidence = null;
     this.textSpeed = 'normal'; /* slow / normal / fast */
@@ -1011,6 +1344,7 @@ class AceGame {
     this.state = 'dialogue';
     this.sceneKey = 'opening';
     this.stepIdx  = 0;
+    this._switchCase(1);
     this._runStep();
   }
 
@@ -1031,6 +1365,7 @@ class AceGame {
 
     /* 特殊ステップ処理 */
     if (step.type === 'scene_label') {
+      if (step.setCase) this._switchCase(step.setCase);
       this._showSceneLabel(step.text, () => {
         this._nextStep();
         if (step.goto) {
@@ -1043,8 +1378,8 @@ class AceGame {
     }
 
     if (step.type === 'crossexam_start') {
-      const ceData = step.ceData === 'crossexam2' ? CROSSEXAM2 : CROSSEXAM;
-      this._startCrossExam(ceData);
+      const ceMap = { crossexam2: CROSSEXAM2, crossexam3: CROSSEXAM3 };
+      this._startCrossExam(ceMap[step.ceData] || CROSSEXAM);
       return;
     }
 
@@ -1278,16 +1613,18 @@ class AceGame {
 
   _showTestimony() {
     const st = this.ceStatements[this.ceIdx];
+    const witnessId = this.ceCurrent.witnessId || 'kamijo';
+    const witness   = CHARS[witnessId] || CHARS.kamijo;
     this.el.testimonyText.textContent = st.text;
     this.el.testimonyCounter.textContent = `${this.ceIdx + 1}／${this.ceStatements.length}`;
 
     /* 台詞欄に証言者名 */
     this.el.speakerName.textContent = this.ceCurrent.witnessName;
-    this.el.speakerName.className   = 'spk-kamijo';
+    this.el.speakerName.className   = witness.spkClass;
     this.el.dialogueText.textContent = '（← ▶ で証言を移動 ／ 「尋問」で詳しく聞く ／ 「証拠提出」で矛盾を指摘）';
     this.el.dialogueText.className  = 'system-style';
 
-    this._setChar(this.el.sprCenter, this.el.charCenter, 'kamijo', 'normal');
+    this._setChar(this.el.sprCenter, this.el.charCenter, witnessId, 'normal');
     this._setChar(this.el.sprLeft,  this.el.charLeft,  null, '');
     this._setChar(this.el.sprRight, this.el.charRight, null, '');
 
@@ -1540,10 +1877,23 @@ class AceGame {
     this.ceStatements = ce.statements.map(s => ({ ...s }));
     this.cePressedSet.clear();
     /* crossexam_startステップに戻る（sceneは現在のcurrentのまま） */
-    const restartScene = ce === CROSSEXAM2 ? 'day2_testimony' : 'testimony_intro';
+    const restartScene = ce === CROSSEXAM2 ? 'day2_testimony'
+                       : ce === CROSSEXAM3 ? 'case2_testimony'
+                       : 'testimony_intro';
     this.sceneKey = restartScene;
     this.stepIdx  = 1;
     this._startCrossExam(ce);
+  }
+
+  /* ---- 事件切替 ---- */
+  _evidenceForCase(caseNum) {
+    return Object.values(EVIDENCE_DATA).filter(ev => (ev.case || 1) === caseNum);
+  }
+
+  _switchCase(caseNum) {
+    this.currentCase     = caseNum;
+    this.evidenceList    = this._evidenceForCase(caseNum);
+    this.selectedEvidence = null;
   }
 
   /* ---- エンド ---- */
@@ -1639,6 +1989,7 @@ class AceGame {
       ceIdx:         this.ceIdx,
       cePressedSet:  [...this.cePressedSet],
       ceActive:      this.ceActive,
+      currentCase:   this.currentCase,
       state:         this.state,
       date:          new Date().toLocaleString('ja-JP'),
       label:         this._saveLabel(),
@@ -1671,6 +2022,7 @@ class AceGame {
     this.ceIdx    = data.ceIdx ?? 0;
     this.cePressedSet = new Set(data.cePressedSet || []);
     this.ceActive = false;
+    this._switchCase(data.currentCase || 1);
     this._closeMenu();
     this.el.titleScreen.classList.add('hidden');
     this.el.gameoverScreen.classList.add('hidden');
