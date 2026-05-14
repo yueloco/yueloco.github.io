@@ -58,16 +58,29 @@ const IMAGES = {
       breakdown: 'img/char/kimura_breakdown.png',
       lying:     'img/char/kimura_lying.png',
     },
+    kuroda: {
+      normal:    'img/char/kuroda_normal.png',
+    },
+    tamura: {
+      normal:    'img/char/tamura_normal.png',
+      nervous:   'img/char/tamura_nervous.png',
+      surprised: 'img/char/tamura_surprised.png',
+      breakdown: 'img/char/tamura_breakdown.png',
+    },
   },
   evidence: {
-    autopsy:      'img/evidence/autopsy.png',
-    elevator_log: 'img/evidence/elevator_log.png',
-    work_log:     'img/evidence/work_log.png',
-    security_cam: 'img/evidence/security_cam.png',
-    knife:        'img/evidence/knife.png',
-    alibi_card:   'img/evidence/alibi_card.png',
-    mansion_cam:  'img/evidence/mansion_cam.png',
-    diary:        'img/evidence/diary.png',
+    autopsy:        'img/evidence/autopsy.png',
+    elevator_log:   'img/evidence/elevator_log.png',
+    work_log:       'img/evidence/work_log.png',
+    security_cam:   'img/evidence/security_cam.png',
+    knife:          'img/evidence/knife.png',
+    alibi_card:     'img/evidence/alibi_card.png',
+    mansion_cam:    'img/evidence/mansion_cam.png',
+    diary:          'img/evidence/diary.png',
+    wine_bottle:    'img/evidence/wine_bottle.png',
+    inn_cam:        'img/evidence/inn_cam.png',
+    medical_report: 'img/evidence/medical_report.png',
+    guest_register: 'img/evidence/guest_register.png',
   },
   ui: {
     objection: 'img/ui/objection.png',
@@ -135,6 +148,31 @@ const EVIDENCE_DATA = {
     icon: '📔',
     desc: '被害者・高橋拓海の私的な日記。\n「最近、美咲が誰かに尾けられている。\n　隣人の様子もおかしい。一度問い詰めるか」\nと記載がある。',
   },
+  /* ---- 第3話の証拠 ---- */
+  wine_bottle: {
+    id: 'wine_bottle', case: 3,
+    name: 'ワインボトル',
+    icon: '🍷',
+    desc: '現場・書斎で発見されたボトル。\n黒田の指紋が柄の部分に検出された。\n被害者と黒田が夕食時に共に飲んだとされる。',
+  },
+  inn_cam: {
+    id: 'inn_cam', case: 3,
+    name: '旅館システムログ',
+    icon: '🖥️',
+    desc: '旅館「白川荘」の玄関システムログ。\n21:30　黒田 誠　外出\n22:15　黒田 誠　帰館\n自動記録のため改ざん不可。',
+  },
+  medical_report: {
+    id: 'medical_report', case: 3,
+    name: '毒物検査報告書',
+    icon: '🧪',
+    desc: '被害者・白川義一の毒物検査結果。\n使用毒物：アコニチン（トリカブト由来）\n致死量到達まで：30〜60分\n推定投与時刻：21:30〜22:00',
+  },
+  guest_register: {
+    id: 'guest_register', case: 3,
+    name: '宿泊台帳',
+    icon: '📒',
+    desc: '黒田が宿泊したときの台帳。\n「旅館売却の相談のため、週1で来館」\nと旅館側のメモあり。\n来館歴：計4回（直近2週間）',
+  },
 };
 
 /* ================================================================
@@ -148,6 +186,8 @@ const CHARS = {
   kamijo:    { id: 'kamijo',    label: '上条 京介\n（証人）',       spkClass: 'spk-kamijo',    spkName: '上条 京介' },
   misaki:    { id: 'misaki',    label: '中村 美咲\n（被告人）',     spkClass: 'spk-misaki',    spkName: '中村 美咲' },
   kimura:    { id: 'kimura',    label: '木村 真一\n（証人）',       spkClass: 'spk-kimura',    spkName: '木村 真一' },
+  kuroda:    { id: 'kuroda',    label: '黒田 誠\n（被告人）',       spkClass: 'spk-kuroda',    spkName: '黒田 誠' },
+  tamura:    { id: 'tamura',    label: '田村 玲子\n（証人）',       spkClass: 'spk-tamura',    spkName: '田村 玲子' },
   narration: { id: 'none',      label: '',                         spkClass: 'spk-narration', spkName: '' },
   system:    { id: 'none',      label: '',                         spkClass: 'spk-system',    spkName: '―' },
 };
@@ -926,8 +966,281 @@ SCENES['case2_ending'] = [
     speaker: 'narration', bg: 'black',
     text: '―― 第2話　完 ――',
   },
+  { type: 'scene_label', text: '― さらに数週間後 ―', bg: 'black', goto: 'case3_opening', setCase: 3 },
+];
+
+/* ================================================================
+   第3話「偽りの遺書」
+   ================================================================ */
+
+SCENES['case3_opening'] = [
+  { type: 'scene_label', text: '第3話\n偽りの遺書', bg: 'black', goto: 'case3_brief' },
+];
+
+SCENES['case3_brief'] = [
+  {
+    speaker: 'narration', bg: 'black',
+    text: '静岡・山間の老舗旅館「白川荘」。\n明治から続く由緒ある宿の主人が、\n書斎で毒殺された。',
+  },
+  {
+    speaker: 'narration', bg: 'black',
+    text: '現場に残ったのは、ひとつのワインボトル。\nそこに刻まれていたのは、\n宿の再建を頼まれた経営コンサルタントの指紋。',
+  },
+  {
+    speaker: 'narration', bg: 'black',
+    text: '逮捕されたのは——黒田 誠、42歳。\n彼が無実だと信じた者が、\nまた成歩堂の元を訪れた。',
+  },
+  { type: 'scene_label', text: '第1日　午前9時\n地方裁判所 第3法廷', bg: 'black', goto: 'case3_court' },
+];
+
+SCENES['case3_court'] = [
+  {
+    speaker: 'judge', bg: 'courtroom_judge', center: 'judge', centerPose: 'normal',
+    text: '本日、黒田誠被告人に対する\n殺人事件の公判を開廷いたします。',
+  },
+  {
+    speaker: 'edgeworth', bg: 'courtroom_prosecution', right: 'edgeworth', rightPose: 'normal',
+    text: '検察は冒頭陳述を行います。\n被告人は現場に居合わせており、\n指紋が凶器に残されていた。',
+  },
+  {
+    speaker: 'edgeworth', bg: 'courtroom_prosecution', right: 'edgeworth', rightPose: 'point',
+    text: 'さらに目撃証言もある。\n有罪は疑いようがありません。',
+  },
+  {
+    speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'think',
+    right: 'maya', rightPose: 'worried',
+    text: '（指紋……でも黒田さんは\n　「ワインを一緒に飲んだだけだ」と言っていた）',
+  },
+  {
+    speaker: 'maya', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'normal',
+    right: 'maya', rightPose: 'worried',
+    text: 'あの証人、なんか\n嫌な感じがするんだよね……',
+  },
+  {
+    speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'confident',
+    right: 'maya', rightPose: 'normal',
+    text: '直感か。\nでも——証拠で証明するのが俺の仕事だ。',
+  },
+  {
+    speaker: 'judge', bg: 'courtroom_judge', center: 'judge', centerPose: 'normal',
+    text: '検察側、証人を呼んでください。',
+  },
+  {
+    speaker: 'edgeworth', bg: 'courtroom_prosecution', right: 'edgeworth', rightPose: 'normal',
+    text: '旅館「白川荘」の女将、\n田村 玲子さんを召喚します。',
+  },
+  {
+    speaker: 'tamura', bg: 'courtroom_witness', center: 'tamura', centerPose: 'normal',
+    text: '田村 玲子でございます。\n真実のみを申し述べます。',
+  },
+  {
+    speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'think',
+    text: '（落ち着きすぎている……\n　何かを準備してきた顔だ）',
+  },
+  {
+    speaker: 'edgeworth', bg: 'courtroom_prosecution', right: 'edgeworth', rightPose: 'normal',
+    text: '証人、事件当夜の状況を\n証言してください。',
+    goto: 'case3_testimony',
+  },
+];
+
+SCENES['case3_testimony'] = [
+  {
+    speaker: 'system', bg: 'courtroom_witness', center: 'tamura', centerPose: 'normal',
+    text: '＜証言＞　田村 玲子の証言が始まります。\n旅館の防犯カメラ記録に注目してください。',
+  },
+  { type: 'crossexam_start', ceData: 'crossexam4' },
+];
+
+SCENES['case3_after_contradiction'] = [
+  {
+    speaker: 'tamura', bg: 'courtroom_witness', center: 'tamura', centerPose: 'nervous',
+    text: 'そ、そんなはず……\n記録が間違っているのでは……？',
+  },
+  {
+    speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'point',
+    text: '旅館のシステムログは\n自動で生成されます。\n改ざんは不可能です。',
+  },
+  {
+    speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'point',
+    text: '黒田さんが21:30に外出した後、\n白川さんが毒を盛られたとすれば——\n犯行が可能な人物は限られる。',
+  },
+  {
+    speaker: 'maya', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'normal',
+    right: 'maya', rightPose: 'worried',
+    text: '（成歩堂くん……！）',
+  },
+  {
+    speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'point',
+    right: 'maya', rightPose: 'excited',
+    anim: 'objection',
+    text: '毒物検査報告書によれば、\n致死量に達するまで30分から1時間。\n黒田さんが戻ったのは22:15。\n——間に合わない！',
+  },
+  {
+    speaker: 'edgeworth', bg: 'courtroom_prosecution', right: 'edgeworth', rightPose: 'surprised',
+    text: '……！',
+  },
+  {
+    speaker: 'edgeworth', bg: 'courtroom_prosecution', right: 'edgeworth', rightPose: 'thinking',
+    text: '（黒田が外出した21:30から22:15の間に\n　毒が盛られたとすれば……\n　旅館に残っていた者が……）',
+  },
+  {
+    speaker: 'judge', bg: 'courtroom_judge', center: 'judge', centerPose: 'surprised',
+    text: '証人！\nこれはどういうことですか！',
+  },
+  {
+    speaker: 'tamura', bg: 'courtroom_witness', center: 'tamura', centerPose: 'nervous',
+    text: '…………',
+  },
+  {
+    speaker: 'tamura', bg: 'courtroom_witness', center: 'tamura', centerPose: 'breakdown',
+    text: '……旦那様は……\n旅館を売るとおっしゃった……！',
+  },
+  {
+    speaker: 'tamura', bg: 'courtroom_witness', center: 'tamura', centerPose: 'breakdown',
+    text: '私が30年……30年守ってきたこの旅館を！\nあの男（黒田）のせいで！',
+  },
+  {
+    speaker: 'tamura', bg: 'courtroom_witness', center: 'tamura', centerPose: 'nervous',
+    text: '旦那様がいなければ……\n私が女将として守っていけると……\n思ったんです……',
+  },
+  {
+    speaker: 'judge', bg: 'courtroom_judge', center: 'judge', centerPose: 'surprised',
+    text: '自……自白！！',
+  },
+  {
+    speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'confident',
+    right: 'maya', rightPose: 'excited',
+    text: '裁判長。\n被告人・黒田誠に対する\n嫌疑は完全に晴れました。',
+  },
+  {
+    speaker: 'edgeworth', bg: 'courtroom_prosecution', right: 'edgeworth', rightPose: 'normal',
+    text: '……検察は起訴を取り下げます。',
+  },
+  {
+    speaker: 'judge', bg: 'courtroom_judge', center: 'judge', centerPose: 'normal',
+    text: '本件被告・黒田誠に対し、\n無　罪　を言い渡す！',
+  },
+  {
+    speaker: 'narration', bg: 'courtroom_wide',
+    text: '――　閉　廷　――',
+  },
+  { type: 'scene_label', text: '判決後\n法廷の廊下', bg: 'corridor', goto: 'case3_ending' },
+];
+
+SCENES['case3_ending'] = [
+  {
+    speaker: 'kuroda', bg: 'corridor', center: 'kuroda', centerPose: 'normal',
+    text: '成歩堂先生……\n助けていただきありがとうございます。',
+  },
+  {
+    speaker: 'phoenix', bg: 'corridor', left: 'phoenix', leftPose: 'confident',
+    right: 'maya', rightPose: 'happy',
+    text: 'あなたは無実でした。\nそれが証明できてよかった。',
+  },
+  {
+    speaker: 'kuroda', bg: 'corridor', center: 'kuroda', centerPose: 'normal',
+    text: '田村さんが……まさか。\n彼女こそ、旅館を最も愛していた\n人だったのに……',
+  },
+  {
+    speaker: 'maya', bg: 'corridor', left: 'phoenix', leftPose: 'normal',
+    right: 'maya', rightPose: 'worried',
+    text: '……愛しすぎたんだよ、きっと。',
+  },
+  {
+    speaker: 'phoenix', bg: 'corridor', left: 'phoenix', leftPose: 'think',
+    right: 'maya', rightPose: 'worried',
+    text: '（愛が犯罪の動機になる……\n　法廷で何度もそれを見てきた）',
+  },
+  {
+    speaker: 'edgeworth', bg: 'corridor', right: 'edgeworth', rightPose: 'normal',
+    text: '成歩堂。……よくやった。',
+  },
+  {
+    speaker: 'phoenix', bg: 'corridor', left: 'phoenix', leftPose: 'surprised',
+    right: 'edgeworth', rightPose: 'smirk',
+    text: '御剣……素直に言えるようになったじゃないか。',
+  },
+  {
+    speaker: 'edgeworth', bg: 'corridor', right: 'edgeworth', rightPose: 'thinking',
+    text: '……余計なことを言うな。\n次は負けん。',
+  },
+  {
+    speaker: 'phoenix', bg: 'corridor', left: 'phoenix', leftPose: 'confident',
+    right: 'edgeworth', rightPose: 'normal',
+    text: '楽しみにしてるよ。',
+  },
+  {
+    speaker: 'narration', bg: 'corridor',
+    text: '旅館「白川荘」は後日、\n残されたスタッフによって\n再建への道を歩み始めた。',
+  },
+  {
+    speaker: 'narration', bg: 'black',
+    text: '真実を暴くことは、\n時に誰かを深く傷つける。',
+  },
+  {
+    speaker: 'narration', bg: 'black',
+    text: 'それでも——\n成歩堂 龍一は今日も法廷に立つ。\n依頼人の未来を信じて。',
+  },
+  {
+    speaker: 'narration', bg: 'black',
+    text: '―― 第3話　完 ――',
+  },
   { type: 'end' },
 ];
+
+/* ================================================================
+   第4反対尋問データ（第3話）
+   ================================================================ */
+const CROSSEXAM4 = {
+  witnessName: '田村 玲子',
+  witnessId:   'tamura',
+  maxHealth:   5,
+  contradictionLines: [
+    { speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'point',
+      text: '旅館のシステムログを見てください！\n黒田さんは21:30に玄関を出ています！' },
+    { speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'point',
+      text: '夜10時——22:00に書斎で\n黒田さんの声を聞いたというのは\n絶対に不可能です！' },
+    { speaker: 'tamura', bg: 'courtroom_witness', center: 'tamura', centerPose: 'surprised',
+      text: '……そ、そんな……！' },
+  ],
+  nextScene: 'case3_after_contradiction',
+  statements: [
+    /* 0 */
+    {
+      text: '夜10時頃、書斎から\n激しい言い争いの声が聞こえました。',
+      pressScene: [
+        { speaker: 'phoenix', text: '言い争いの内容は\n聞き取れましたか？', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'normal' },
+        { speaker: 'tamura',  text: '「もう決めたんだ」という旦那様の声と、\n「待ってください」という声が……', bg: 'courtroom_witness', center: 'tamura', centerPose: 'normal' },
+        { speaker: 'phoenix', text: '「待ってください」——\nその声が黒田さんのものだと？', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'think' },
+        { speaker: 'tamura',  text: 'ええ、黒田様の声は\n聞き慣れておりますから。', bg: 'courtroom_witness', center: 'tamura', centerPose: 'normal' },
+        { speaker: 'maya',    text: '（声を聞き慣れてる……？\n　何か引っかかるな）', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'normal', right: 'maya', rightPose: 'worried' },
+      ],
+      contradicts: null,
+    },
+    /* 1 */
+    {
+      text: '言い争いの後しばらくして、\n黒田様が廊下を歩く足音がしました。',
+      pressScene: [
+        { speaker: 'phoenix', text: '足音で黒田さんだと\nわかったんですか？', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'normal' },
+        { speaker: 'tamura',  text: 'ええ……歩き方に特徴がありますから。\n長く一緒にいると、わかるものです。', bg: 'courtroom_witness', center: 'tamura', centerPose: 'normal' },
+        { speaker: 'phoenix', text: '（黒田さんが来ていたのはほんの数日のはず。\n　「長く一緒に」は少し大げさでは……？）', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'think' },
+      ],
+      contradicts: null,
+    },
+    /* 2 ★矛盾 inn_cam */
+    {
+      text: '夜10時頃には確かに、\n黒田様は旅館の中にいました。',
+      pressScene: [
+        { speaker: 'phoenix', text: '黒田さんが旅館の中にいたことを\n直接確認しましたか？', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'point', anim: 'hold_it' },
+        { speaker: 'tamura',  text: 'はい、確かに……\n廊下で姿を見かけましたから。', bg: 'courtroom_witness', center: 'tamura', centerPose: 'nervous' },
+        { speaker: 'phoenix', text: '（旅館のシステムログがあれば……\n　黒田さんの出入りが記録されているはずだ）', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'think' },
+      ],
+      contradicts: 'inn_cam',
+      wrongPenalty: 'その証拠では証言を崩せない。\n黒田さんの行動を証明できる証拠を探してください。',
+    },
+  ],
+};
 
 /* ================================================================
    第3反対尋問データ（第2話）
@@ -1378,7 +1691,7 @@ class AceGame {
     }
 
     if (step.type === 'crossexam_start') {
-      const ceMap = { crossexam2: CROSSEXAM2, crossexam3: CROSSEXAM3 };
+      const ceMap = { crossexam2: CROSSEXAM2, crossexam3: CROSSEXAM3, crossexam4: CROSSEXAM4 };
       this._startCrossExam(ceMap[step.ceData] || CROSSEXAM);
       return;
     }
@@ -1879,6 +2192,7 @@ class AceGame {
     /* crossexam_startステップに戻る（sceneは現在のcurrentのまま） */
     const restartScene = ce === CROSSEXAM2 ? 'day2_testimony'
                        : ce === CROSSEXAM3 ? 'case2_testimony'
+                       : ce === CROSSEXAM4 ? 'case3_testimony'
                        : 'testimony_intro';
     this.sceneKey = restartScene;
     this.stepIdx  = 1;
