@@ -113,6 +113,31 @@ const IMAGES = {
    証拠品データ
    ================================================================ */
 const EVIDENCE_DATA = {
+  /* ---- 第6話 ---- */
+  party_record: {
+    id: 'party_record', case: 6,
+    name: '社内パーティー出席記録',
+    icon: '🎉',
+    desc: '事件当日の社内パーティー出席記録。\n21:00 パーティー開始（全員出席）\n21:15 青山 健二 退席\n21:20 野口 浩 退席（テラスへ）\n21:30 今井 幸子 退席（外出）',
+  },
+  security_log: {
+    id: 'security_log', case: 6,
+    name: 'セキュリティログ',
+    icon: '🔒',
+    desc: 'ビル最上階のセキュリティシステムログ。\n21:20 野口 浩　テラスドア開錠\n21:22 青山 健二　テラスドア開錠（ICカード）\n21:48 通報により警察到着',
+  },
+  financial_audit: {
+    id: 'financial_audit', case: 6,
+    name: '財務調査報告書',
+    icon: '💰',
+    desc: '野口デザイン社の内部財務調査結果。\n調査対象期間：過去3年間\n不明出金総額：4,740万円\n経路：青山 健二名義の口座へ複数回振込\n野口社長は事件2日前に調査報告を受領。',
+  },
+  struggle_evidence: {
+    id: 'struggle_evidence', case: 6,
+    name: '争った痕跡（鑑識報告）',
+    icon: '🔍',
+    desc: '屋上テラスの鑑識報告。\n柵付近に二者の靴跡（男性2名分と推定）\n野口の右腕に防御創あり\n今井の靴跡はテラス入り口付近のみ\n（柵まで5m以上離れた位置）',
+  },
   /* ---- 第5話 ---- */
   toxicology_report: {
     id: 'toxicology_report', case: 5,
@@ -256,6 +281,8 @@ const CHARS = {
   sakamoto:  { id: 'sakamoto',  label: '坂本 純一\n（証人）',       spkClass: 'spk-sakamoto',  spkName: '坂本 純一' },
   fukasawa:  { id: 'fukasawa',  label: '深沢 愛子\n（証人）',       spkClass: 'spk-fukasawa',  spkName: '深沢 愛子' },
   kishimoto: { id: 'kishimoto', label: '岸本 悠\n（被告人）',       spkClass: 'spk-kishimoto', spkName: '岸本 悠' },
+  aoyama:    { id: 'aoyama',    label: '青山 健二\n（証人）',       spkClass: 'spk-aoyama',    spkName: '青山 健二' },
+  imai:      { id: 'imai',      label: '今井 幸子\n（被告人）',     spkClass: 'spk-imai',      spkName: '今井 幸子' },
   narration: { id: 'none',      label: '',                         spkClass: 'spk-narration', spkName: '' },
   system:    { id: 'none',      label: '',                         spkClass: 'spk-system',    spkName: '―' },
 };
@@ -1793,9 +1820,203 @@ SCENES['case5_ending'] = [
     speaker: 'narration', bg: 'black',
     text: '―― 第5話　完 ――',
   },
+  { type: 'scene_label', text: '― 数週間後 ―', bg: 'black', goto: 'case6_opening', setCase: 6 },
+];
+
+/* ================================================================
+   第6話「偽りの友情」シーン
+   ================================================================ */
+SCENES['case6_opening'] = [
+  { type: 'scene_label', text: '第6話\n偽りの友情', bg: 'black', goto: 'case6_brief' },
+];
+
+SCENES['case6_brief'] = [
   {
     speaker: 'narration', bg: 'black',
-    text: '―― 全5話　完　ありがとうございました ――',
+    text: '6月某日——\n広告代理店「ノグチデザイン」の最上階から\n社長・野口 浩が転落死した。',
+  },
+  {
+    speaker: 'narration', bg: 'black',
+    text: '逮捕されたのは、共同創業者の今井 幸子。\n「経営権を巡る口論の末、\n野口を突き落とした」という。',
+  },
+  {
+    speaker: 'narration', bg: 'black',
+    text: 'だが唯一の目撃者——秘書の青山 健二が\n「今井が突き落とした」と証言した。\n本当にそれは真実か？',
+  },
+  { type: 'scene_label', text: '第1日　午前9時\n地方裁判所 第3法廷', bg: 'black', goto: 'case6_court' },
+];
+
+SCENES['case6_court'] = [
+  {
+    speaker: 'judge', bg: 'courtroom_judge', center: 'judge', centerPose: 'normal',
+    text: '本日、今井 幸子被告人に対する\n殺人事件の公判を開廷いたします。',
+  },
+  {
+    speaker: 'edgeworth', bg: 'courtroom_prosecution', right: 'edgeworth', rightPose: 'normal',
+    text: '被告人・今井 幸子は、\n事件当夜の社内パーティー終了後、\n屋上テラスで野口社長と口論になりました。',
+  },
+  {
+    speaker: 'edgeworth', bg: 'courtroom_prosecution', right: 'edgeworth', rightPose: 'point',
+    text: 'その際、今井被告が野口社長を\n柵の外へ突き落とした——\n秘書の青山 健二氏がそれを目撃しています。',
+  },
+  {
+    speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'think',
+    right: 'maya', rightPose: 'worried',
+    text: '（屋上テラスで……\n　今井さんは「口論はしたが突き落としていない」\n　と言っている）',
+  },
+  {
+    speaker: 'maya', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'normal',
+    right: 'maya', rightPose: 'worried',
+    text: '成歩堂くん……青山さんの証言って\n本当に信頼できるの？',
+  },
+  {
+    speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'confident',
+    right: 'maya', rightPose: 'normal',
+    text: 'それを見極めるのが、\n僕の仕事だよ。',
+  },
+  {
+    speaker: 'judge', bg: 'courtroom_judge', center: 'judge', centerPose: 'normal',
+    text: '証人を召喚してください。',
+  },
+  {
+    speaker: 'edgeworth', bg: 'courtroom_prosecution', right: 'edgeworth', rightPose: 'normal',
+    text: '目撃者——青山 健二氏を召喚します。',
+  },
+  {
+    speaker: 'aoyama', bg: 'courtroom_witness', center: 'aoyama', centerPose: 'normal',
+    text: '青山 健二です。\n私が見たことをありのまま話します。',
+  },
+  {
+    speaker: 'judge', bg: 'courtroom_judge', center: 'judge', centerPose: 'normal',
+    text: 'では、証言をどうぞ。',
+  },
+  { type: 'crossexam_start', ceData: 'crossexam7' },
+];
+
+SCENES['case6_testimony'] = [
+  {
+    speaker: 'narration', bg: 'courtroom_witness',
+    text: '（証言が始まった）',
+  },
+  { type: 'crossexam_start', ceData: 'crossexam7' },
+];
+
+SCENES['case6_after_contradiction'] = [
+  {
+    speaker: 'aoyama', bg: 'courtroom_witness', center: 'aoyama', centerPose: 'surprised',
+    text: 'な……なんで……！',
+  },
+  {
+    speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'point',
+    right: 'maya', rightPose: 'excited',
+    text: '「社内パーティー出席記録」を見てください！\nあなたはパーティーを21:15に退席しています。',
+    anim: 'objection',
+  },
+  {
+    speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'point',
+    text: '一方、セキュリティログによれば\n野口社長がテラスに出たのは21:20。\nあなたはパーティー会場にいたはずの\n時刻に、野口社長を「目撃」したことになる！',
+  },
+  {
+    speaker: 'edgeworth', bg: 'courtroom_prosecution', right: 'edgeworth', rightPose: 'surprised',
+    text: '……なんだと。',
+  },
+  {
+    speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'confident',
+    text: 'さらに——会社の財務調査報告書です。\n青山さん、あなたは3年間で\n4,700万円を横領していた。\n野口社長はそれを知っていた！',
+  },
+  {
+    speaker: 'aoyama', bg: 'courtroom_witness', center: 'aoyama', centerPose: 'nervous',
+    text: '……ち、違う……俺は……',
+  },
+  {
+    speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'point',
+    text: '野口社長を消したのはあなた自身だ！\n今井さんを罪に着せるために、\n嘘の証言をしたんですね！！',
+  },
+  {
+    speaker: 'aoyama', bg: 'courtroom_witness', center: 'aoyama', centerPose: 'breakdown',
+    text: '……わかった……もう、いい……\n全部、俺がやった……',
+  },
+  {
+    speaker: 'judge', bg: 'courtroom_judge', center: 'judge', centerPose: 'surprised',
+    text: '青山 健二——\n偽証罪および殺人の疑いで\nただちに身柄を拘束します。',
+  },
+  {
+    speaker: 'judge', bg: 'courtroom_judge', center: 'judge', centerPose: 'stern',
+    text: '今井 幸子被告人に対するすべての訴因を\nここに棄却します。\n無罪を宣言します。',
+  },
+  {
+    speaker: 'narration', bg: 'black',
+    text: '木槌の音が響き——\n法廷の空気が、\nゆっくりと晴れていった。',
+  },
+  { type: 'scene_label', text: '判決後\n法廷の廊下', bg: 'corridor', goto: 'case6_ending' },
+];
+
+SCENES['case6_ending'] = [
+  {
+    speaker: 'imai', bg: 'corridor', center: 'imai', centerPose: 'normal',
+    text: '成歩堂先生……\nまさか、青山が……',
+  },
+  {
+    speaker: 'phoenix', bg: 'corridor', left: 'phoenix', leftPose: 'normal',
+    right: 'maya', rightPose: 'normal',
+    text: 'つらいですよね。\n長年の仕事仲間だった人が……',
+  },
+  {
+    speaker: 'imai', bg: 'corridor', center: 'imai', centerPose: 'normal',
+    text: '野口さんも、私も……\n青山のことを信じていた。\nなのに——',
+  },
+  {
+    speaker: 'maya', bg: 'corridor', left: 'phoenix', leftPose: 'normal',
+    right: 'maya', rightPose: 'worried',
+    text: '……人の心って、\nわからないものだね。',
+  },
+  {
+    speaker: 'phoenix', bg: 'corridor', left: 'phoenix', leftPose: 'think',
+    right: 'maya', rightPose: 'worried',
+    text: '（友情という名の仮面——\n　それを剥がすのが弁護士の仕事でもある。\n　重い仕事だ）',
+  },
+  {
+    speaker: 'edgeworth', bg: 'corridor', right: 'edgeworth', rightPose: 'normal',
+    text: '……成歩堂。',
+  },
+  {
+    speaker: 'phoenix', bg: 'corridor', left: 'phoenix', leftPose: 'normal',
+    right: 'edgeworth', rightPose: 'normal',
+    text: '御剣か。',
+  },
+  {
+    speaker: 'edgeworth', bg: 'corridor', right: 'edgeworth', rightPose: 'thinking',
+    text: '……出席記録とセキュリティログを\n突き合わせるとは、な。\n私も見落としていた。',
+  },
+  {
+    speaker: 'phoenix', bg: 'corridor', left: 'phoenix', leftPose: 'confident',
+    right: 'edgeworth', rightPose: 'smirk',
+    text: '証言が嘘なら、\n証拠がそれを証明する。\nいつものことだよ。',
+  },
+  {
+    speaker: 'edgeworth', bg: 'corridor', right: 'edgeworth', rightPose: 'smirk',
+    text: 'フ——相変わらず\n生意気なやつだ。\n次は必ず勝つ。',
+  },
+  {
+    speaker: 'maya', bg: 'corridor', left: 'phoenix', leftPose: 'normal',
+    right: 'maya', rightPose: 'excited',
+    text: '御剣さんって本当に\n毎回「次は必ず」って言うよね〜！',
+  },
+  {
+    speaker: 'edgeworth', bg: 'corridor', right: 'edgeworth', rightPose: 'surprised',
+    text: '……うるさい、綾里くん。',
+  },
+  {
+    speaker: 'narration', bg: 'black',
+    text: 'どんな友情も、どんな信頼も——\n嘘は必ず証拠の前に崩れる。',
+  },
+  {
+    speaker: 'narration', bg: 'black',
+    text: '―― 第6話　完 ――',
+  },
+  {
+    speaker: 'narration', bg: 'black',
+    text: '―― 全6話　完　ありがとうございました ――',
   },
   { type: 'end' },
 ];
@@ -1908,6 +2129,58 @@ const CROSSEXAM6 = {
         { speaker: 'phoenix', text: '「普段通り」——\nお茶はどうやって用意しましたか？', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'normal' },
         { speaker: 'fukasawa', text: '台所でお茶を入れて、\n書斎に持っていきました。', bg: 'courtroom_witness', center: 'fukasawa', centerPose: 'normal' },
         { speaker: 'phoenix', text: '（台所で……茶碗の残留物が検出された。\n　そこで混入した可能性が非常に高い）', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'think' },
+      ],
+      contradicts: null,
+    },
+  ],
+};
+
+/* ================================================================
+   第7反対尋問データ（第6話）
+   ================================================================ */
+const CROSSEXAM7 = {
+  witnessName: '青山 健二',
+  witnessId:   'aoyama',
+  maxHealth:   5,
+  contradictionLines: [
+    { speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'point',
+      text: '社内パーティーの出席記録を見てください！\nあなたは21:15にパーティーを退席しています！',
+      anim: 'objection' },
+    { speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'point',
+      text: '野口社長がテラスに出たのは21:20——\nあなたはすでにパーティー会場にいなかった！\nどこから「目撃」できたんですか！！' },
+    { speaker: 'aoyama', bg: 'courtroom_witness', center: 'aoyama', centerPose: 'surprised',
+      text: 'そ……そんな記録……！' },
+  ],
+  nextScene: 'case6_after_contradiction',
+  statements: [
+    /* 0 */
+    {
+      text: '私はパーティーが終わった後も\nしばらく会場に残っていました。',
+      pressScene: [
+        { speaker: 'phoenix', text: '「しばらく残っていた」——\n何時頃まで残っていましたか？', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'normal' },
+        { speaker: 'aoyama', text: '……21時20分か、30分くらいまでは\nいたと思います。', bg: 'courtroom_witness', center: 'aoyama', centerPose: 'normal' },
+        { speaker: 'phoenix', text: '（21:20まで……\n　それは出席記録と矛盾する）', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'think' },
+      ],
+      contradicts: 'party_record',
+      wrongPenalty: 'その証拠だけでは証言の時刻を直接反証できない。\n退席時刻を明確に示す証拠を探してください。',
+    },
+    /* 1 */
+    {
+      text: '廊下から見ると、テラスで今井さんが\n野口社長を柵の外へ押し出すのが見えました。',
+      pressScene: [
+        { speaker: 'phoenix', text: '「廊下から見えた」——\nテラスのドアは開いていたんですか？', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'normal' },
+        { speaker: 'aoyama', text: '……ドアが少し開いていて、\nガラス越しに見えました。', bg: 'courtroom_witness', center: 'aoyama', centerPose: 'normal' },
+        { speaker: 'maya', text: '（セキュリティログには\n　21:22に青山のカードで開錠とある……\n　廊下から見ていたならカードを使う必要は？）', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'normal', right: 'maya', rightPose: 'worried' },
+      ],
+      contradicts: null,
+    },
+    /* 2 */
+    {
+      text: '今井さんと野口社長の間には、\n経営権を巡る激しい対立があったと\n社内で広く知られていました。',
+      pressScene: [
+        { speaker: 'phoenix', text: '「社内で広く知られていた」——\nあなた自身も対立の詳細を知っていましたか？', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'normal' },
+        { speaker: 'aoyama', text: '……ある程度は。\n先生——野口社長から直接聞いたことも。', bg: 'courtroom_witness', center: 'aoyama', centerPose: 'nervous' },
+        { speaker: 'phoenix', text: '（野口社長と頻繁に話していた……\n　横領の件も知られていたのか？）', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'think' },
       ],
       contradicts: null,
     },
@@ -2311,7 +2584,7 @@ class AceGame {
     }
 
     if (step.type === 'crossexam_start') {
-      const ceMap = { crossexam2: CROSSEXAM2, crossexam3: CROSSEXAM3, crossexam4: CROSSEXAM4, crossexam5: CROSSEXAM5, crossexam6: CROSSEXAM6 };
+      const ceMap = { crossexam2: CROSSEXAM2, crossexam3: CROSSEXAM3, crossexam4: CROSSEXAM4, crossexam5: CROSSEXAM5, crossexam6: CROSSEXAM6, crossexam7: CROSSEXAM7 };
       this._startCrossExam(ceMap[step.ceData] || CROSSEXAM);
       return;
     }
@@ -2815,6 +3088,7 @@ class AceGame {
                        : ce === CROSSEXAM4 ? 'case3_testimony'
                        : ce === CROSSEXAM5 ? 'case4_testimony'
                        : ce === CROSSEXAM6 ? 'case5_testimony'
+                       : ce === CROSSEXAM7 ? 'case6_testimony'
                        : 'testimony_intro';
     this.sceneKey = restartScene;
     this.stepIdx  = 1;
