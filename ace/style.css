@@ -213,6 +213,8 @@ body {
 .char-sprite[data-char="tamura"]    { --char-color: #6a4a1a; }
 .char-sprite[data-char="fujiwara"]  { --char-color: #4a2a5a; }
 .char-sprite[data-char="sakamoto"]  { --char-color: #1a3a4a; }
+.char-sprite[data-char="fukasawa"]  { --char-color: #5a2a2a; }
+.char-sprite[data-char="kishimoto"] { --char-color: #2a3a5a; }
 .char-sprite[data-char="none"]::before,
 .char-sprite[data-char="none"]::after { display: none; }
 
@@ -349,6 +351,8 @@ body {
 #speaker-name.spk-tamura    { background: #3a2a0a; color: #ffddaa; }
 #speaker-name.spk-fujiwara  { background: #2a0a3a; color: #ddaaff; }
 #speaker-name.spk-sakamoto  { background: #0a2030; color: #aaccee; }
+#speaker-name.spk-fukasawa  { background: #3a0a0a; color: #ffbbbb; }
+#speaker-name.spk-kishimoto { background: #0a1a3a; color: #aabbdd; }
 #speaker-name.spk-narration { background: transparent; color: transparent; font-size: 0; }
 #speaker-name.spk-system    { background: #1a1a1a; color: #888; }
 

@@ -113,6 +113,31 @@ const IMAGES = {
    証拠品データ
    ================================================================ */
 const EVIDENCE_DATA = {
+  /* ---- 第5話 ---- */
+  toxicology_report: {
+    id: 'toxicology_report', case: 5,
+    name: '毒物鑑定書',
+    icon: '🧪',
+    desc: '被害者・橘 隆の血中毒物鑑定書。\n検出物質：有機リン系農薬（除草剤由来）\n推定摂取から発症まで：約3時間\n死亡推定時刻：午後6時〜7時',
+  },
+  tea_cup: {
+    id: 'tea_cup', case: 5,
+    name: '茶碗（現物）',
+    icon: '🍵',
+    desc: '橘の書斎で発見された茶碗。\n残留物から同種の農薬成分を検出。\n深沢 愛子が「午後3時頃にお茶を用意した」\nと供述した際に使用。',
+  },
+  visit_record: {
+    id: 'visit_record', case: 5,
+    name: '来訪記録',
+    icon: '📋',
+    desc: '橘宅の来訪者記録。\n14:45 深沢 愛子（元助手）入室\n15:05 深沢 愛子 退室\n17:50 岸本 悠（担当編集者）入室\n18:20 岸本 悠 退室',
+  },
+  fukasawa_background: {
+    id: 'fukasawa_background', case: 5,
+    name: '深沢の経歴書',
+    icon: '📄',
+    desc: '深沢 愛子の身上調書。\n出身：長野県農家（除草剤農家）\n職歴：橘 隆の助手（3年間）→現在無職\n特記：原稿持ち込みを複数回拒否された記録あり',
+  },
   autopsy: {
     id: 'autopsy', case: 1,
     name: '検死報告書',
@@ -229,6 +254,8 @@ const CHARS = {
   tamura:    { id: 'tamura',    label: '田村 玲子\n（証人）',       spkClass: 'spk-tamura',    spkName: '田村 玲子' },
   fujiwara:  { id: 'fujiwara',  label: '藤原 夏美\n（被告人）',     spkClass: 'spk-fujiwara',  spkName: '藤原 夏美' },
   sakamoto:  { id: 'sakamoto',  label: '坂本 純一\n（証人）',       spkClass: 'spk-sakamoto',  spkName: '坂本 純一' },
+  fukasawa:  { id: 'fukasawa',  label: '深沢 愛子\n（証人）',       spkClass: 'spk-fukasawa',  spkName: '深沢 愛子' },
+  kishimoto: { id: 'kishimoto', label: '岸本 悠\n（被告人）',       spkClass: 'spk-kishimoto', spkName: '岸本 悠' },
   narration: { id: 'none',      label: '',                         spkClass: 'spk-narration', spkName: '' },
   system:    { id: 'none',      label: '',                         spkClass: 'spk-system',    spkName: '―' },
 };
@@ -1560,9 +1587,215 @@ SCENES['case4_ending'] = [
     speaker: 'narration', bg: 'black',
     text: '―― 第4話　完 ――\n\n　　　…',
   },
+  { type: 'scene_label', text: '― またある日 ―', bg: 'black', goto: 'case5_opening', setCase: 5 },
+];
+
+/* ================================================================
+   第5話「最後の証言」シーン
+   ================================================================ */
+SCENES['case5_opening'] = [
+  { type: 'scene_label', text: '第5話\n最後の証言', bg: 'black', goto: 'case5_brief' },
+];
+
+SCENES['case5_brief'] = [
   {
     speaker: 'narration', bg: 'black',
-    text: '―― 全4話　完　ありがとうございました ――',
+    text: '5月某日――\n著名な推理小説家・橘 隆が\n自宅書斎で毒死した。',
+  },
+  {
+    speaker: 'narration', bg: 'black',
+    text: '逮捕されたのは、担当編集者の岸本 悠。\n「先生のグラスに薬を混ぜるのを見た」\nという証人が現れたのだ。',
+  },
+  {
+    speaker: 'narration', bg: 'black',
+    text: '証人の名は、深沢 愛子——\n橘の元助手。\n「岸本さんが先生を殺した」と訴えていた。',
+  },
+  { type: 'scene_label', text: '第1日　午前9時\n地方裁判所 第3法廷', bg: 'black', goto: 'case5_court' },
+];
+
+SCENES['case5_court'] = [
+  {
+    speaker: 'judge', bg: 'courtroom_judge', center: 'judge', centerPose: 'normal',
+    text: '本日、岸本 悠被告人に対する\n殺人事件の公判を開廷いたします。',
+  },
+  {
+    speaker: 'edgeworth', bg: 'courtroom_prosecution', right: 'edgeworth', rightPose: 'normal',
+    text: '検察の冒頭陳述を行います。\n被告人は被害者・橘 隆のウイスキーに\n毒物を混入し、死亡させました。',
+  },
+  {
+    speaker: 'edgeworth', bg: 'courtroom_prosecution', right: 'edgeworth', rightPose: 'point',
+    text: '目撃者がいます。現場にいた深沢 愛子氏——\n彼女が被告人の犯行を目撃しました。',
+  },
+  {
+    speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'think',
+    right: 'maya', rightPose: 'worried',
+    text: '（目撃者か……\n　岸本さんは「絶対にやっていない」と\n　言い張っている）',
+  },
+  {
+    speaker: 'maya', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'normal',
+    right: 'maya', rightPose: 'worried',
+    text: '成歩堂くん……岸本さん、\n本当に無実なの？',
+  },
+  {
+    speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'confident',
+    right: 'maya', rightPose: 'normal',
+    text: '証言を聞けばわかる。\n必ず矛盾を見つけてみせる。',
+  },
+  {
+    speaker: 'judge', bg: 'courtroom_judge', center: 'judge', centerPose: 'normal',
+    text: '証人を召喚してください。',
+  },
+  {
+    speaker: 'edgeworth', bg: 'courtroom_prosecution', right: 'edgeworth', rightPose: 'normal',
+    text: '証人——深沢 愛子氏を召喚します。',
+  },
+  {
+    speaker: 'fukasawa', bg: 'courtroom_witness', center: 'fukasawa', centerPose: 'normal',
+    text: '……深沢 愛子です。\n先生の無念を晴らすために、\nここに立ちました。',
+  },
+  {
+    speaker: 'judge', bg: 'courtroom_judge', center: 'judge', centerPose: 'normal',
+    text: '証人、証言を始めてください。',
+  },
+  { type: 'crossexam_start', ceData: 'crossexam6' },
+];
+
+SCENES['case5_after_contradiction'] = [
+  {
+    speaker: 'fukasawa', bg: 'courtroom_witness', center: 'fukasawa', centerPose: 'surprised',
+    text: 'そ……そんな……！',
+  },
+  {
+    speaker: 'edgeworth', bg: 'courtroom_prosecution', right: 'edgeworth', rightPose: 'surprised',
+    text: '……成歩堂、どういうことだ。',
+  },
+  {
+    speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'point',
+    right: 'maya', rightPose: 'excited',
+    text: '「残留農薬分析報告書」を見てください！\n検出された毒物は、農業用除草剤の成分です。',
+  },
+  {
+    speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'point',
+    text: 'この毒は一般の書店員や編集者では\n入手が極めて困難です。\nしかし——深沢さん、あなたは農家の出身。',
+  },
+  {
+    speaker: 'fukasawa', bg: 'courtroom_witness', center: 'fukasawa', centerPose: 'nervous',
+    text: '……ち、違います！',
+  },
+  {
+    speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'confident',
+    text: 'そして、毒物鑑定書には\n「摂取から発症まで約3時間」とあります。\nあなたが「毒を盛るのを見た」時刻に混入しても\n辻褄が合わない！',
+  },
+  {
+    speaker: 'maya', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'normal',
+    right: 'maya', rightPose: 'excited',
+    text: '成歩堂くん！！',
+  },
+  {
+    speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'point',
+    text: '橘先生が毒を摂取したのは、\nあなたが「お茶を淹れた」午後3時頃——\n岸本さんが来る3時間も前です！！',
+  },
+  {
+    speaker: 'fukasawa', bg: 'courtroom_witness', center: 'fukasawa', centerPose: 'breakdown',
+    text: 'やめて……やめてください……',
+  },
+  {
+    speaker: 'judge', bg: 'courtroom_judge', center: 'judge', centerPose: 'surprised',
+    text: '証人……あなたが……！',
+  },
+  {
+    speaker: 'fukasawa', bg: 'courtroom_witness', center: 'fukasawa', centerPose: 'breakdown',
+    text: '先生は……私の小説を\n「才能がない」と切り捨てた……！\n何年も世話をしたのに……！',
+  },
+  {
+    speaker: 'edgeworth', bg: 'courtroom_prosecution', right: 'edgeworth', rightPose: 'thinking',
+    text: '……検察は訴因を変更する必要があります。\n一時休廷を求めます。',
+  },
+  {
+    speaker: 'judge', bg: 'courtroom_judge', center: 'judge', centerPose: 'stern',
+    text: '認めます。\n岸本悠被告人に対する全ての容疑は\nここで棄却します。',
+  },
+  {
+    speaker: 'judge', bg: 'courtroom_judge', center: 'judge', centerPose: 'stern',
+    text: '深沢 愛子——\nあなたは偽証および殺人の疑いで\n身柄を拘束します。',
+  },
+  {
+    speaker: 'narration', bg: 'black',
+    text: 'バン——と槌が鳴り響き、\n法廷に静寂が訪れた。',
+  },
+  { type: 'scene_label', text: '判決後\n法廷の廊下', bg: 'corridor', goto: 'case5_ending' },
+];
+
+SCENES['case5_testimony'] = [
+  {
+    speaker: 'narration', bg: 'courtroom_witness',
+    text: '（証言が始まった）',
+  },
+  { type: 'crossexam_start', ceData: 'crossexam6' },
+];
+
+SCENES['case5_ending'] = [
+  {
+    speaker: 'kishimoto', bg: 'corridor', center: 'kishimoto', centerPose: 'normal',
+    text: '成歩堂先生……\n本当に、ありがとうございました。',
+  },
+  {
+    speaker: 'phoenix', bg: 'corridor', left: 'phoenix', leftPose: 'normal',
+    right: 'maya', rightPose: 'happy',
+    text: '無実を証明できて良かった。\n後は……深沢さんの裁判を\n見守るしかないですね。',
+  },
+  {
+    speaker: 'maya', bg: 'corridor', left: 'phoenix', leftPose: 'normal',
+    right: 'maya', rightPose: 'worried',
+    text: '深沢さんも……つらかったんだろうな。\nでも、だからって……',
+  },
+  {
+    speaker: 'phoenix', bg: 'corridor', left: 'phoenix', leftPose: 'think',
+    right: 'maya', rightPose: 'worried',
+    text: '（人の心の闇は、\n　どんな証拠よりも深いことがある）',
+  },
+  {
+    speaker: 'edgeworth', bg: 'corridor', right: 'edgeworth', rightPose: 'normal',
+    text: '……成歩堂。',
+  },
+  {
+    speaker: 'phoenix', bg: 'corridor', left: 'phoenix', leftPose: 'normal',
+    right: 'edgeworth', rightPose: 'normal',
+    text: '御剣……来てたのか。',
+  },
+  {
+    speaker: 'edgeworth', bg: 'corridor', right: 'edgeworth', rightPose: 'thinking',
+    text: '……今日の弁護は、\n見事だった。\n毒物の摂取時刻に気づいたのは、\n私も一歩遅かった。',
+  },
+  {
+    speaker: 'phoenix', bg: 'corridor', left: 'phoenix', leftPose: 'confident',
+    right: 'edgeworth', rightPose: 'smirk',
+    text: '君が相手なら——\n必ず勝つつもりで来るよ。',
+  },
+  {
+    speaker: 'edgeworth', bg: 'corridor', right: 'edgeworth', rightPose: 'smirk',
+    text: 'フ……\n次こそ、だな。',
+  },
+  {
+    speaker: 'maya', bg: 'corridor', left: 'phoenix', leftPose: 'normal',
+    right: 'maya', rightPose: 'excited',
+    text: '御剣さん、「次こそ」って\n何回言ってるの〜！',
+  },
+  {
+    speaker: 'edgeworth', bg: 'corridor', right: 'edgeworth', rightPose: 'surprised',
+    text: '……黙れ、綾里くん。',
+  },
+  {
+    speaker: 'narration', bg: 'black',
+    text: '真実は、証拠の奥に眠っている。\nそして——弁護士だけが、\nその声を法廷に届けられる。',
+  },
+  {
+    speaker: 'narration', bg: 'black',
+    text: '―― 第5話　完 ――',
+  },
+  {
+    speaker: 'narration', bg: 'black',
+    text: '―― 全5話　完　ありがとうございました ――',
   },
   { type: 'end' },
 ];
@@ -1615,6 +1848,68 @@ const CROSSEXAM5 = {
       ],
       contradicts: 'neighbor_log',
       wrongPenalty: 'その証拠では証言と矛盾しない。\n坂本の行動を直接証明できる証拠を探してください。',
+    },
+  ],
+};
+
+/* ================================================================
+   第6反対尋問データ（第5話）
+   ================================================================ */
+const CROSSEXAM6 = {
+  witnessName: '深沢 愛子',
+  witnessId:   'fukasawa',
+  maxHealth:   5,
+  contradictionLines: [
+    { speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'point',
+      text: 'この毒物鑑定書を見てください！\n農薬が摂取されたのは午後3時頃——\n岸本さんが来る3時間以上前です！！',
+      anim: 'objection' },
+    { speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'point',
+      text: '深沢さん——あなたが午後3時にお茶を用意した。\nその時、毒を混入したんですね！' },
+    { speaker: 'fukasawa', bg: 'courtroom_witness', center: 'fukasawa', centerPose: 'surprised',
+      text: 'そんな……そんなはずは……！' },
+  ],
+  nextScene: 'case5_after_contradiction',
+  statements: [
+    /* 0 */
+    {
+      text: '午後6時頃、岸本さんが先生のグラスに\n白い粉を混ぜるのを見ました。',
+      pressScene: [
+        { speaker: 'phoenix', text: '「グラスに混ぜた」——\nどこから見ていたんですか？', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'normal' },
+        { speaker: 'fukasawa', text: '書斎の入り口に立っていました。\n隙間からはっきり見えました。', bg: 'courtroom_witness', center: 'fukasawa', centerPose: 'normal' },
+        { speaker: 'phoenix', text: '（……入り口から？\n　あの書斎は入り口から棚が邪魔で\n　机が見えにくいはずだが）', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'think' },
+      ],
+      contradicts: null,
+    },
+    /* 1 */
+    {
+      text: '私はその後すぐに部屋を出て、\nそのことを誰にも言えなかった……怖くて。',
+      pressScene: [
+        { speaker: 'phoenix', text: '「誰にも言えなかった」——\nいつから今日まで、ずっと黙っていたと？', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'normal' },
+        { speaker: 'fukasawa', text: 'ええ……ずっと怖くて……', bg: 'courtroom_witness', center: 'fukasawa', centerPose: 'nervous' },
+        { speaker: 'maya', text: '（でも、わざわざ証人として現れたのに\n　「怖くて言えなかった」はおかしくない……？）', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'normal', right: 'maya', rightPose: 'worried' },
+      ],
+      contradicts: null,
+    },
+    /* 2 ★ */
+    {
+      text: '先生は午後6時半頃から\n体調が悪そうにしていました。',
+      pressScene: [
+        { speaker: 'phoenix', text: '「午後6時半から」——\nそれが毒の効き始めだと？', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'normal' },
+        { speaker: 'fukasawa', text: 'そうです。岸本さんが毒を盛ったから\n6時半頃から苦しみ始めたんです。', bg: 'courtroom_witness', center: 'fukasawa', centerPose: 'normal' },
+        { speaker: 'phoenix', text: '（……それが矛盾だ。\n　鑑定書によれば「摂取から3時間後に発症」\n　6時半発症なら、混入は午後3時半以前！）', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'think' },
+      ],
+      contradicts: 'toxicology_report',
+      wrongPenalty: 'その証拠では証言の時刻と矛盾しない。\n毒の発症タイミングを証明できる証拠を探してください。',
+    },
+    /* 3 */
+    {
+      text: '私は午後3時に先生のお茶を用意しましたが、\nそれは普段通りのことです。',
+      pressScene: [
+        { speaker: 'phoenix', text: '「普段通り」——\nお茶はどうやって用意しましたか？', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'normal' },
+        { speaker: 'fukasawa', text: '台所でお茶を入れて、\n書斎に持っていきました。', bg: 'courtroom_witness', center: 'fukasawa', centerPose: 'normal' },
+        { speaker: 'phoenix', text: '（台所で……茶碗の残留物が検出された。\n　そこで混入した可能性が非常に高い）', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'think' },
+      ],
+      contradicts: null,
     },
   ],
 };
@@ -2016,7 +2311,7 @@ class AceGame {
     }
 
     if (step.type === 'crossexam_start') {
-      const ceMap = { crossexam2: CROSSEXAM2, crossexam3: CROSSEXAM3, crossexam4: CROSSEXAM4, crossexam5: CROSSEXAM5 };
+      const ceMap = { crossexam2: CROSSEXAM2, crossexam3: CROSSEXAM3, crossexam4: CROSSEXAM4, crossexam5: CROSSEXAM5, crossexam6: CROSSEXAM6 };
       this._startCrossExam(ceMap[step.ceData] || CROSSEXAM);
       return;
     }
@@ -2519,6 +2814,7 @@ class AceGame {
                        : ce === CROSSEXAM3 ? 'case2_testimony'
                        : ce === CROSSEXAM4 ? 'case3_testimony'
                        : ce === CROSSEXAM5 ? 'case4_testimony'
+                       : ce === CROSSEXAM6 ? 'case5_testimony'
                        : 'testimony_intro';
     this.sceneKey = restartScene;
     this.stepIdx  = 1;
