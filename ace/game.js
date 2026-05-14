@@ -67,6 +67,16 @@ const IMAGES = {
       surprised: 'img/char/tamura_surprised.png',
       breakdown: 'img/char/tamura_breakdown.png',
     },
+    fujiwara: {
+      normal:    'img/char/fujiwara_normal.png',
+    },
+    sakamoto: {
+      normal:    'img/char/sakamoto_normal.png',
+      nervous:   'img/char/sakamoto_nervous.png',
+      surprised: 'img/char/sakamoto_surprised.png',
+      lying:     'img/char/sakamoto_lying.png',
+      breakdown: 'img/char/sakamoto_breakdown.png',
+    },
   },
   evidence: {
     autopsy:        'img/evidence/autopsy.png',
@@ -80,7 +90,11 @@ const IMAGES = {
     wine_bottle:    'img/evidence/wine_bottle.png',
     inn_cam:        'img/evidence/inn_cam.png',
     medical_report: 'img/evidence/medical_report.png',
-    guest_register: 'img/evidence/guest_register.png',
+    guest_register:  'img/evidence/guest_register.png',
+    insurance_doc:   'img/evidence/insurance_doc.png',
+    phone_record:    'img/evidence/phone_record.png',
+    neighbor_log:    'img/evidence/neighbor_log.png',
+    forensics:       'img/evidence/forensics.png',
   },
   ui: {
     objection: 'img/ui/objection.png',
@@ -173,6 +187,31 @@ const EVIDENCE_DATA = {
     icon: '📒',
     desc: '黒田が宿泊したときの台帳。\n「旅館売却の相談のため、週1で来館」\nと旅館側のメモあり。\n来館歴：計4回（直近2週間）',
   },
+  /* ---- 第4話の証拠 ---- */
+  insurance_doc: {
+    id: 'insurance_doc', case: 4,
+    name: '保険証書',
+    icon: '📄',
+    desc: '被害者・藤原浩一の生命保険証書。\n保険金額：5,000万円\n受取人：坂本 純一（旧友として登録）\n締結日：2年前',
+  },
+  phone_record: {
+    id: 'phone_record', case: 4,
+    name: '通話記録',
+    icon: '📱',
+    desc: '事件当日の通話記録。\n21:45 被害者→坂本への着信\n通話時間：3分12秒\n22:00以降の着信・発信なし',
+  },
+  neighbor_log: {
+    id: 'neighbor_log', case: 4,
+    name: 'マンション入退館記録',
+    icon: '🔐',
+    desc: 'マンションのオートロック入退館記録。\n21:52　坂本 純一　入館\n22:18　坂本 純一　退館\n自動システムによる記録のため改ざん不可。',
+  },
+  forensics: {
+    id: 'forensics', case: 4,
+    name: '死因鑑定書',
+    icon: '🔬',
+    desc: '司法解剖による死因鑑定書。\n死因：頸部圧迫による窒息死\n推定死亡時刻：22:00〜22:30\n※鈍器による外傷は認められない',
+  },
 };
 
 /* ================================================================
@@ -188,6 +227,8 @@ const CHARS = {
   kimura:    { id: 'kimura',    label: '木村 真一\n（証人）',       spkClass: 'spk-kimura',    spkName: '木村 真一' },
   kuroda:    { id: 'kuroda',    label: '黒田 誠\n（被告人）',       spkClass: 'spk-kuroda',    spkName: '黒田 誠' },
   tamura:    { id: 'tamura',    label: '田村 玲子\n（証人）',       spkClass: 'spk-tamura',    spkName: '田村 玲子' },
+  fujiwara:  { id: 'fujiwara',  label: '藤原 夏美\n（被告人）',     spkClass: 'spk-fujiwara',  spkName: '藤原 夏美' },
+  sakamoto:  { id: 'sakamoto',  label: '坂本 純一\n（証人）',       spkClass: 'spk-sakamoto',  spkName: '坂本 純一' },
   narration: { id: 'none',      label: '',                         spkClass: 'spk-narration', spkName: '' },
   system:    { id: 'none',      label: '',                         spkClass: 'spk-system',    spkName: '―' },
 };
@@ -1186,7 +1227,7 @@ SCENES['case3_ending'] = [
     speaker: 'narration', bg: 'black',
     text: '―― 第3話　完 ――',
   },
-  { type: 'end' },
+  { type: 'scene_label', text: '― 数日後 ―', bg: 'black', goto: 'case4_opening', setCase: 4 },
 ];
 
 /* ================================================================
@@ -1290,6 +1331,290 @@ const CROSSEXAM3 = {
       ],
       contradicts: 'alibi_card',
       wrongPenalty: 'この証拠では証言の核心を突けない。\nもう一度考えてみてください。',
+    },
+  ],
+};
+
+/* ================================================================
+   第4話「消えた真実」
+   ================================================================ */
+
+SCENES['case4_opening'] = [
+  { type: 'scene_label', text: '第4話\n消えた真実', bg: 'black', goto: 'case4_brief' },
+];
+
+SCENES['case4_brief'] = [
+  {
+    speaker: 'narration', bg: 'black',
+    text: '4月某日――\nとある高層マンションの一室で、\n男性が絞殺された。',
+  },
+  {
+    speaker: 'narration', bg: 'black',
+    text: '逮捕されたのは、被害者の妻・藤原夏美。\n唯一の目撃証人は、隣室に住む男だった。',
+  },
+  {
+    speaker: 'narration', bg: 'black',
+    text: '「彼女は無実だ」——\nまた今日も、成歩堂 龍一は法廷に立つ。',
+  },
+  { type: 'scene_label', text: '第1日　午前9時\n地方裁判所 第3法廷', bg: 'black', goto: 'case4_court' },
+];
+
+SCENES['case4_court'] = [
+  {
+    speaker: 'judge', bg: 'courtroom_judge', center: 'judge', centerPose: 'normal',
+    text: '本日、藤原夏美被告人に対する\n殺人事件の公判を開廷いたします。',
+  },
+  {
+    speaker: 'edgeworth', bg: 'courtroom_prosecution', right: 'edgeworth', rightPose: 'normal',
+    text: '検察は冒頭陳述を行います。\n被告人は事件当夜、夫・藤原浩一を\n自宅で絞殺しました。',
+  },
+  {
+    speaker: 'edgeworth', bg: 'courtroom_prosecution', right: 'edgeworth', rightPose: 'point',
+    text: '隣人の目撃証言があります。\n証拠は揃っている。',
+  },
+  {
+    speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'think',
+    right: 'maya', rightPose: 'worried',
+    text: '（目撃証人か……\n　夏美さんは「身に覚えがない」と言っていた）',
+  },
+  {
+    speaker: 'maya', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'normal',
+    right: 'maya', rightPose: 'worried',
+    text: '成歩堂くん……夏美さん、\n本当につらそうだったね。',
+  },
+  {
+    speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'confident',
+    right: 'maya', rightPose: 'normal',
+    text: '必ず守る。\nそのための証拠は、もう手元にある。',
+  },
+  {
+    speaker: 'judge', bg: 'courtroom_judge', center: 'judge', centerPose: 'normal',
+    text: '検察側、証人を呼んでください。',
+  },
+  {
+    speaker: 'edgeworth', bg: 'courtroom_prosecution', right: 'edgeworth', rightPose: 'normal',
+    text: '本件の目撃証人を召喚します。\n被告人の隣室に住む——坂本 純一氏です。',
+  },
+  {
+    speaker: 'sakamoto', bg: 'courtroom_witness', center: 'sakamoto', centerPose: 'normal',
+    text: '……坂本 純一です。\n真実のみを述べます。',
+  },
+  {
+    speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'think',
+    text: '（……妙に落ち着いている。\n　何かを隠しているような目だ）',
+  },
+  {
+    speaker: 'edgeworth', bg: 'courtroom_prosecution', right: 'edgeworth', rightPose: 'normal',
+    text: '証人、事件当夜の状況を\n証言してください。',
+    goto: 'case4_testimony',
+  },
+];
+
+SCENES['case4_testimony'] = [
+  {
+    speaker: 'system', bg: 'courtroom_witness', center: 'sakamoto', centerPose: 'normal',
+    text: '＜証言＞　坂本 純一の証言が始まります。\n入退館記録に注目してください。',
+  },
+  { type: 'crossexam_start', ceData: 'crossexam5' },
+];
+
+SCENES['case4_after_contradiction'] = [
+  {
+    speaker: 'sakamoto', bg: 'courtroom_witness', center: 'sakamoto', centerPose: 'nervous',
+    text: 'そ、それは……\nシステムの誤作動では……！',
+  },
+  {
+    speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'point',
+    text: '自動システムに誤作動はありません。\n21時52分にあなたは隣室に入り、\n22時18分に退館した。',
+  },
+  {
+    speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'point',
+    text: '死因鑑定書によれば、\n死亡推定時刻は22時から22時半。\n——あなたが部屋にいた時間と完全に重なる！',
+  },
+  {
+    speaker: 'edgeworth', bg: 'courtroom_prosecution', right: 'edgeworth', rightPose: 'thinking',
+    text: '（入退館記録……死亡推定時刻……\n　それが重なるとすれば……）',
+  },
+  {
+    speaker: 'maya', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'normal',
+    right: 'maya', rightPose: 'excited',
+    text: '（成歩堂くん、あとひと押し！）',
+  },
+  {
+    speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'point',
+    right: 'maya', rightPose: 'excited',
+    anim: 'objection',
+    text: 'さらに——保険証書を見てください！\n5,000万円の生命保険の受取人は、\n妻の夏美さんではなく——坂本、あなただ！',
+  },
+  {
+    speaker: 'sakamoto', bg: 'courtroom_witness', center: 'sakamoto', centerPose: 'surprised',
+    text: '……！！',
+  },
+  {
+    speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'point',
+    text: '事件当夜、被害者からの通話記録もある。\n21時45分——被害者はあなたを呼び出した。\nそして、その30分後に死亡している。',
+  },
+  {
+    speaker: 'judge', bg: 'courtroom_judge', center: 'judge', centerPose: 'surprised',
+    text: '証人！\nこれはどういうことですか！！',
+  },
+  {
+    speaker: 'sakamoto', bg: 'courtroom_witness', center: 'sakamoto', centerPose: 'nervous',
+    text: '…………',
+  },
+  {
+    speaker: 'sakamoto', bg: 'courtroom_witness', center: 'sakamoto', centerPose: 'breakdown',
+    text: '浩一は……俺に金を返す気がなかった！\n10年前に貸した2,000万を\nずっとごまかし続けて……！',
+  },
+  {
+    speaker: 'sakamoto', bg: 'courtroom_witness', center: 'sakamoto', centerPose: 'breakdown',
+    text: '電話で「保険金を受け取れ」と言ったんだ。\n「自分が死ねばいい」と……\nだから俺は……俺は……！',
+  },
+  {
+    speaker: 'judge', bg: 'courtroom_judge', center: 'judge', centerPose: 'surprised',
+    text: '自……自白！！\nこれは重大な証言です！',
+  },
+  {
+    speaker: 'edgeworth', bg: 'courtroom_prosecution', right: 'edgeworth', rightPose: 'normal',
+    text: '……検察は、被告人・藤原夏美に対する\n起訴を取り下げます。',
+  },
+  {
+    speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'confident',
+    right: 'maya', rightPose: 'excited',
+    text: '裁判長。\n被告人・藤原夏美は完全な無実です。',
+  },
+  {
+    speaker: 'judge', bg: 'courtroom_judge', center: 'judge', centerPose: 'normal',
+    text: '本件被告・藤原夏美に対し、\n無　罪　を言い渡す！',
+  },
+  {
+    speaker: 'narration', bg: 'courtroom_wide',
+    text: '――　閉　廷　――',
+  },
+  { type: 'scene_label', text: '判決後\n法廷の廊下', bg: 'corridor', goto: 'case4_ending' },
+];
+
+SCENES['case4_ending'] = [
+  {
+    speaker: 'fujiwara', bg: 'corridor', center: 'fujiwara', centerPose: 'normal',
+    text: '成歩堂先生……\n浩一が……坂本さんに殺されたなんて……',
+  },
+  {
+    speaker: 'phoenix', bg: 'corridor', left: 'phoenix', leftPose: 'normal',
+    right: 'maya', rightPose: 'worried',
+    text: '……辛い真実でしたね。\nでも——あなたは自由になれた。',
+  },
+  {
+    speaker: 'fujiwara', bg: 'corridor', center: 'fujiwara', centerPose: 'normal',
+    text: 'ありがとうございます。\n先生がいなければ、\n私は……',
+  },
+  {
+    speaker: 'maya', bg: 'corridor', left: 'phoenix', leftPose: 'normal',
+    right: 'maya', rightPose: 'happy',
+    text: '大丈夫！成歩堂くんは\n絶対に諦めないから！',
+  },
+  {
+    speaker: 'edgeworth', bg: 'corridor', right: 'edgeworth', rightPose: 'normal',
+    text: '……成歩堂。',
+  },
+  {
+    speaker: 'phoenix', bg: 'corridor', left: 'phoenix', leftPose: 'normal',
+    right: 'edgeworth', rightPose: 'normal',
+    text: '御剣。',
+  },
+  {
+    speaker: 'edgeworth', bg: 'corridor', right: 'edgeworth', rightPose: 'thinking',
+    text: '今日の弁護は……見事だった。\n保険証書と入退館記録を結びつけるとは、\n私も気づかなかった。',
+  },
+  {
+    speaker: 'phoenix', bg: 'corridor', left: 'phoenix', leftPose: 'confident',
+    right: 'edgeworth', rightPose: 'smirk',
+    text: '君が相手だから、\n手を抜けなかったんだよ。',
+  },
+  {
+    speaker: 'edgeworth', bg: 'corridor', right: 'edgeworth', rightPose: 'smirk',
+    text: 'フ……それは光栄だな。\n次は負けん——必ずだ。',
+  },
+  {
+    speaker: 'maya', bg: 'corridor', left: 'phoenix', leftPose: 'normal',
+    right: 'maya', rightPose: 'excited',
+    text: '御剣さん、毎回「次は負けん」\nって言ってるよね？',
+  },
+  {
+    speaker: 'edgeworth', bg: 'corridor', right: 'edgeworth', rightPose: 'surprised',
+    text: '……余計なことを言うな、綾里くん。',
+  },
+  {
+    speaker: 'narration', bg: 'corridor',
+    text: 'こうして、第4の事件も幕を閉じた。',
+  },
+  {
+    speaker: 'narration', bg: 'black',
+    text: '真実は、いつも\nどこかに眠っている。',
+  },
+  {
+    speaker: 'narration', bg: 'black',
+    text: 'そしてそれを掘り起こすのが、\n弁護士・成歩堂 龍一の使命だ。',
+  },
+  {
+    speaker: 'narration', bg: 'black',
+    text: '―― 第4話　完 ――\n\n　　　…',
+  },
+  {
+    speaker: 'narration', bg: 'black',
+    text: '―― 全4話　完　ありがとうございました ――',
+  },
+  { type: 'end' },
+];
+
+/* ================================================================
+   第5反対尋問データ（第4話）
+   ================================================================ */
+const CROSSEXAM5 = {
+  witnessName: '坂本 純一',
+  witnessId:   'sakamoto',
+  maxHealth:   5,
+  contradictionLines: [
+    { speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'point',
+      text: 'マンションの入退館記録を見てください！\n21:52にあなたが入館し、\n22:18に退館しています！' },
+    { speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'point',
+      text: '「夜9時から11時まで自室にいた」は\n絶対に嘘です！' },
+    { speaker: 'sakamoto', bg: 'courtroom_witness', center: 'sakamoto', centerPose: 'surprised',
+      text: 'そ……そんな……！' },
+  ],
+  nextScene: 'case4_after_contradiction',
+  statements: [
+    /* 0 */
+    {
+      text: 'その夜は自室でテレビを見ていました。\n隣から口論が聞こえて驚きました。',
+      pressScene: [
+        { speaker: 'phoenix', text: '「口論」と言いましたね。\n内容は聞き取れましたか？', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'normal' },
+        { speaker: 'sakamoto', text: '……言葉まではよく聞こえませんでした。\nただ、激しい言い合いだった。', bg: 'courtroom_witness', center: 'sakamoto', centerPose: 'normal' },
+        { speaker: 'phoenix', text: '（声の主が誰かも\n　確認できなかったということか）', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'think' },
+        { speaker: 'maya', text: '（口論の声を聞いただけ？\n　それだけで証人になれるの？）', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'normal', right: 'maya', rightPose: 'worried' },
+      ],
+      contradicts: null,
+    },
+    /* 1 */
+    {
+      text: '口論は夜10時頃でした。\nその後しばらくして静かになりました。',
+      pressScene: [
+        { speaker: 'phoenix', text: '「夜10時頃」というのは\nどうやって確認しましたか？', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'normal' },
+        { speaker: 'sakamoto', text: '部屋の時計を見ていたので。\n……10時5分か、そのくらいでした。', bg: 'courtroom_witness', center: 'sakamoto', centerPose: 'nervous' },
+        { speaker: 'phoenix', text: '（時計で確認……\n　それは死亡推定時刻の範囲内だ）', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'think' },
+      ],
+      contradicts: null,
+    },
+    /* 2 ★矛盾 neighbor_log */
+    {
+      text: '私は夜9時から11時まで、\nずっと自室にいました。\n外には出ていません。',
+      pressScene: [
+        { speaker: 'phoenix', text: '「ずっと自室に」——\n一度も外に出なかった、と？', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'point', anim: 'hold_it' },
+        { speaker: 'sakamoto', text: 'ええ、もちろんです。\nトイレにも出なかったくらいです。', bg: 'courtroom_witness', center: 'sakamoto', centerPose: 'lying' },
+        { speaker: 'phoenix', text: '（嘘だ……\n　マンションのログが証明している）', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'think' },
+      ],
+      contradicts: 'neighbor_log',
+      wrongPenalty: 'その証拠では証言と矛盾しない。\n坂本の行動を直接証明できる証拠を探してください。',
     },
   ],
 };
@@ -1691,7 +2016,7 @@ class AceGame {
     }
 
     if (step.type === 'crossexam_start') {
-      const ceMap = { crossexam2: CROSSEXAM2, crossexam3: CROSSEXAM3, crossexam4: CROSSEXAM4 };
+      const ceMap = { crossexam2: CROSSEXAM2, crossexam3: CROSSEXAM3, crossexam4: CROSSEXAM4, crossexam5: CROSSEXAM5 };
       this._startCrossExam(ceMap[step.ceData] || CROSSEXAM);
       return;
     }
@@ -2193,6 +2518,7 @@ class AceGame {
     const restartScene = ce === CROSSEXAM2 ? 'day2_testimony'
                        : ce === CROSSEXAM3 ? 'case2_testimony'
                        : ce === CROSSEXAM4 ? 'case3_testimony'
+                       : ce === CROSSEXAM5 ? 'case4_testimony'
                        : 'testimony_intro';
     this.sceneKey = restartScene;
     this.stepIdx  = 1;
