@@ -113,6 +113,37 @@ const IMAGES = {
    証拠品データ
    ================================================================ */
 const EVIDENCE_DATA = {
+  /* ---- 第7話 ---- */
+  autopsy_c7: {
+    id: 'autopsy_c7', case: 7,
+    name: '死体検案書',
+    icon: '📋',
+    desc: '被害者・橋本 誠の検案書。\n死因：銃創による失血死\n推定死亡時刻：21:30〜22:00\n発見場所：マンション地下駐車場B2',
+  },
+  entrance_log: {
+    id: 'entrance_log', case: 7,
+    name: 'エントランス解錠記録',
+    icon: '🔑',
+    desc: 'ICカード式オートロックのシステム記録。\n21:55 橋本 誠（外出）\n——以降、23:59まで外部からの解錠記録なし——\n※内側からの解錠・手動開錠は記録されない',
+  },
+  camera_gap: {
+    id: 'camera_gap', case: 7,
+    name: '防犯カメラ欠損報告',
+    icon: '📷',
+    desc: '警察によるデジタルフォレンジック報告。\nエントランスカメラ：21:48〜22:22 データ消去痕跡\n地下駐車場カメラ：21:50〜22:18 同様の欠損\n消去には管理者権限（管理室端末）が必要。',
+  },
+  victim_memo: {
+    id: 'victim_memo', case: 7,
+    name: '被害者の手帳',
+    icon: '📔',
+    desc: '橋本 誠の手帳より。\n事件3日前の記述：\n「堂島の管理費流用、確認済み。\n　来週、管理組合に報告する予定。」\n金額：推定260万円',
+  },
+  nishimura_alibi: {
+    id: 'nishimura_alibi', case: 7,
+    name: '西村のコンビニ領収書',
+    icon: '🧾',
+    desc: '被告人・西村 剛のアリバイ証拠。\n発行日時：21:47\n発行店舗：マンションから徒歩15分のコンビニ\n（マンション到着が22時頃であれば整合する）',
+  },
   /* ---- 第6話 ---- */
   party_record: {
     id: 'party_record', case: 6,
@@ -283,6 +314,8 @@ const CHARS = {
   kishimoto: { id: 'kishimoto', label: '岸本 悠\n（被告人）',       spkClass: 'spk-kishimoto', spkName: '岸本 悠' },
   aoyama:    { id: 'aoyama',    label: '青山 健二\n（証人）',       spkClass: 'spk-aoyama',    spkName: '青山 健二' },
   imai:      { id: 'imai',      label: '今井 幸子\n（被告人）',     spkClass: 'spk-imai',      spkName: '今井 幸子' },
+  dojima:    { id: 'dojima',    label: '堂島 孝雄\n（証人）',       spkClass: 'spk-dojima',    spkName: '堂島 孝雄' },
+  nishimura: { id: 'nishimura', label: '西村 剛\n（被告人）',       spkClass: 'spk-nishimura', spkName: '西村 剛' },
   narration: { id: 'none',      label: '',                         spkClass: 'spk-narration', spkName: '' },
   system:    { id: 'none',      label: '',                         spkClass: 'spk-system',    spkName: '―' },
 };
@@ -2014,9 +2047,218 @@ SCENES['case6_ending'] = [
     speaker: 'narration', bg: 'black',
     text: '―― 第6話　完 ――',
   },
+  { type: 'scene_label', text: '― さらに翌月 ―', bg: 'black', goto: 'case7_opening', setCase: 7 },
+];
+
+/* ================================================================
+   第7話「消えた夜の記録」シーン
+   ================================================================ */
+SCENES['case7_opening'] = [
+  { type: 'scene_label', text: '第7話\n消えた夜の記録', bg: 'black', goto: 'case7_brief' },
+];
+
+SCENES['case7_brief'] = [
   {
     speaker: 'narration', bg: 'black',
-    text: '―― 全6話　完　ありがとうございました ――',
+    text: '7月某日——\n高級マンションの地下駐車場で\n建築家・橋本 誠が射殺された。',
+  },
+  {
+    speaker: 'narration', bg: 'black',
+    text: '逮捕されたのは義弟の西村 剛。\n根拠はただ一つ——\nマンション管理人の「目撃証言」だった。',
+  },
+  {
+    speaker: 'narration', bg: 'black',
+    text: '「22時頃、西村さんが入館するのを見た」\n管理人・堂島 孝雄はそう言った。\nだが——なぜ、防犯カメラの映像は消えているのか？',
+  },
+  { type: 'scene_label', text: '第1日　午前9時\n地方裁判所 第3法廷', bg: 'black', goto: 'case7_court' },
+];
+
+SCENES['case7_court'] = [
+  {
+    speaker: 'judge', bg: 'courtroom_judge', center: 'judge', centerPose: 'normal',
+    text: '本日、西村 剛被告人に対する\n殺人事件の公判を開廷いたします。',
+  },
+  {
+    speaker: 'edgeworth', bg: 'courtroom_prosecution', right: 'edgeworth', rightPose: 'normal',
+    text: '被告人・西村 剛は、7月14日夜、\n義兄・橋本 誠を地下駐車場において\n射殺しました。',
+  },
+  {
+    speaker: 'edgeworth', bg: 'courtroom_prosecution', right: 'edgeworth', rightPose: 'point',
+    text: '被告人は22時頃に現場マンションへ入館。\nこれはマンション管理人・堂島 孝雄氏が\n直接目撃しています。',
+  },
+  {
+    speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'think',
+    right: 'maya', rightPose: 'worried',
+    text: '（目撃証言一本か……\n　でも防犯カメラの映像が消えているのは\n　どういうことだ）',
+  },
+  {
+    speaker: 'maya', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'normal',
+    right: 'maya', rightPose: 'worried',
+    text: '西村さん、22時頃に来たのは\n本当なんでしょ？　自分で言ってるし。',
+  },
+  {
+    speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'think',
+    right: 'maya', rightPose: 'worried',
+    text: '「来た」こと自体は事実だろう。\n問題は——管理人が本当に「見ていたか」だ。',
+  },
+  {
+    speaker: 'maya', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'normal',
+    right: 'maya', rightPose: 'worried',
+    text: '……どういうこと？',
+  },
+  {
+    speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'confident',
+    right: 'maya', rightPose: 'normal',
+    text: '証言を一文一文、\n丁寧に崩していくしかない。',
+  },
+  {
+    speaker: 'judge', bg: 'courtroom_judge', center: 'judge', centerPose: 'normal',
+    text: '証人を召喚してください。',
+  },
+  {
+    speaker: 'edgeworth', bg: 'courtroom_prosecution', right: 'edgeworth', rightPose: 'normal',
+    text: 'マンション管理人——\n堂島 孝雄氏を召喚します。',
+  },
+  {
+    speaker: 'dojima', bg: 'courtroom_witness', center: 'dojima', centerPose: 'normal',
+    text: '堂島 孝雄です。\n私が見たことをそのまま話します。',
+  },
+  {
+    speaker: 'judge', bg: 'courtroom_judge', center: 'judge', centerPose: 'normal',
+    text: '証言をどうぞ。',
+  },
+  { type: 'crossexam_start', ceData: 'crossexam8' },
+];
+
+SCENES['case7_testimony'] = [
+  {
+    speaker: 'narration', bg: 'courtroom_witness',
+    text: '（証言が続く）',
+  },
+  { type: 'crossexam_start', ceData: 'crossexam8' },
+];
+
+SCENES['case7_after_contradiction'] = [
+  {
+    speaker: 'dojima', bg: 'courtroom_witness', center: 'dojima', centerPose: 'surprised',
+    text: 'そ……そんな……記録が……',
+  },
+  {
+    speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'point',
+    right: 'maya', rightPose: 'excited',
+    text: 'エントランスのICカード解錠記録です！\n22時以降、西村さんのカードによる\n解錠は一切記録されていない！！',
+    anim: 'objection',
+  },
+  {
+    speaker: 'edgeworth', bg: 'courtroom_prosecution', right: 'edgeworth', rightPose: 'thinking',
+    text: '……だが、内側から開ける、\nあるいは誰かと一緒に入れば——',
+  },
+  {
+    speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'point',
+    text: '御剣、それならなおさらおかしい。\n堂島さんは「カードリーダーの\n解錠ランプが点灯した」と言いましたね。\nランプが点いたなら記録に残るはずです！',
+  },
+  {
+    speaker: 'dojima', bg: 'courtroom_witness', center: 'dojima', centerPose: 'nervous',
+    text: '……それは……その……',
+  },
+  {
+    speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'confident',
+    text: 'もう一つ——防犯カメラです。\nエントランスも駐車場も、\n21時48分から22時22分の映像が消えている。\nこの操作に必要なのは、管理室の端末だけ。',
+  },
+  {
+    speaker: 'maya', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'normal',
+    right: 'maya', rightPose: 'excited',
+    text: '……つまり、消したのは！',
+  },
+  {
+    speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'point',
+    text: '堂島さん——\nあなたが橋本さんを殺した後、\n自分の姿が映った映像を消した。\nそして西村さんに罪を着せようとした！！',
+  },
+  {
+    speaker: 'dojima', bg: 'courtroom_witness', center: 'dojima', centerPose: 'breakdown',
+    text: '……橋本は俺を……\n俺の全てを奪おうとしたんだ……！\n260万……全部返す気でいた……なのに……',
+  },
+  {
+    speaker: 'judge', bg: 'courtroom_judge', center: 'judge', centerPose: 'surprised',
+    text: '堂島 孝雄——\n偽証罪および殺人の疑いで\n身柄を拘束します。',
+  },
+  {
+    speaker: 'judge', bg: 'courtroom_judge', center: 'judge', centerPose: 'stern',
+    text: '西村 剛被告人に対する全訴因を棄却、\n無罪を宣言します！',
+  },
+  {
+    speaker: 'narration', bg: 'black',
+    text: '静寂の後——\n法廷の扉が開かれ、\n初夏の光が差し込んだ。',
+  },
+  { type: 'scene_label', text: '判決後\n法廷の廊下', bg: 'corridor', goto: 'case7_ending' },
+];
+
+SCENES['case7_ending'] = [
+  {
+    speaker: 'nishimura', bg: 'corridor', center: 'nishimura', centerPose: 'normal',
+    text: '成歩堂先生……\n義兄の死を……こんな形で知ることになるとは。',
+  },
+  {
+    speaker: 'phoenix', bg: 'corridor', left: 'phoenix', leftPose: 'normal',
+    right: 'maya', rightPose: 'normal',
+    text: '……橋本さんは、\n不正を正そうとしていた。\nそれが命取りになってしまった。',
+  },
+  {
+    speaker: 'nishimura', bg: 'corridor', center: 'nishimura', centerPose: 'normal',
+    text: '義兄らしい……\n曲がったことが大嫌いな人でしたから。',
+  },
+  {
+    speaker: 'maya', bg: 'corridor', left: 'phoenix', leftPose: 'normal',
+    right: 'maya', rightPose: 'worried',
+    text: '正しいことをしようとして\n殺されるなんて……',
+  },
+  {
+    speaker: 'phoenix', bg: 'corridor', left: 'phoenix', leftPose: 'think',
+    right: 'maya', rightPose: 'worried',
+    text: '（だから法廷がある。\n　証拠が語れない時、\n　弁護士が声になる）',
+  },
+  {
+    speaker: 'edgeworth', bg: 'corridor', right: 'edgeworth', rightPose: 'normal',
+    text: '……成歩堂。',
+  },
+  {
+    speaker: 'phoenix', bg: 'corridor', left: 'phoenix', leftPose: 'normal',
+    right: 'edgeworth', rightPose: 'normal',
+    text: '御剣。今日は一本取ったな。',
+  },
+  {
+    speaker: 'edgeworth', bg: 'corridor', right: 'edgeworth', rightPose: 'thinking',
+    text: '……カードリーダーの記録と\n防犯カメラの欠損を繋げるとは。\n私は証言の表面しか見ていなかった。',
+  },
+  {
+    speaker: 'phoenix', bg: 'corridor', left: 'phoenix', leftPose: 'confident',
+    right: 'edgeworth', rightPose: 'smirk',
+    text: '証言を信じるな——\n証拠を信じろ、だよ。\n君に教わったことだ。',
+  },
+  {
+    speaker: 'edgeworth', bg: 'corridor', right: 'edgeworth', rightPose: 'smirk',
+    text: '……私がそんなことを言ったか？\nまあいい。次は負けん。',
+  },
+  {
+    speaker: 'maya', bg: 'corridor', left: 'phoenix', leftPose: 'normal',
+    right: 'maya', rightPose: 'excited',
+    text: '「次は負けん」カウント、\n今日で7回目だよ御剣さん！',
+  },
+  {
+    speaker: 'edgeworth', bg: 'corridor', right: 'edgeworth', rightPose: 'surprised',
+    text: '……数えるな。',
+  },
+  {
+    speaker: 'narration', bg: 'black',
+    text: '記録は消せても、真実は消えない。\n成歩堂 龍一は今日もそれを証明した。',
+  },
+  {
+    speaker: 'narration', bg: 'black',
+    text: '―― 第7話　完 ――',
+  },
+  {
+    speaker: 'narration', bg: 'black',
+    text: '―― 全7話　完　ありがとうございました ――',
   },
   { type: 'end' },
 ];
@@ -2183,6 +2425,101 @@ const CROSSEXAM7 = {
         { speaker: 'phoenix', text: '（野口社長と頻繁に話していた……\n　横領の件も知られていたのか？）', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'think' },
       ],
       contradicts: null,
+    },
+  ],
+};
+
+/* ================================================================
+   第8反対尋問データ（第7話）— 難易度：高
+   ================================================================ */
+const CROSSEXAM8 = {
+  witnessName: '堂島 孝雄',
+  witnessId:   'dojima',
+  maxHealth:   5,
+  contradictionLines: [
+    { speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'point',
+      text: 'このエントランス解錠記録を見てください！\n22時以降、西村さんのカードによる解錠は\n一切記録されていません！',
+      anim: 'objection' },
+    { speaker: 'phoenix', bg: 'courtroom_defense', left: 'phoenix', leftPose: 'point',
+      text: 'カードリーダーの解錠ランプが点灯したと\nおっしゃいましたが——\n点灯したなら必ず記録が残るはずです！' },
+    { speaker: 'dojima', bg: 'courtroom_witness', center: 'dojima', centerPose: 'surprised',
+      text: 'そ……そんな……記録が……' },
+  ],
+  nextScene: 'case7_after_contradiction',
+  statements: [
+    /* 0 */
+    {
+      text: '21時頃、橋本様が\n「ちょっと駐車場に」と声をかけて\n出ていかれるのをお見かけしました。',
+      pressScene: [
+        { speaker: 'phoenix', text: '「声をかけて出ていかれた」——\nあなたはその時どこにいましたか？',
+          bg: 'courtroom_defense', left: 'phoenix', leftPose: 'normal' },
+        { speaker: 'dojima', text: '管理室の窓口で書類を整理していました。\n橋本様はいつも私に声をかけてくださるので。',
+          bg: 'courtroom_witness', center: 'dojima', centerPose: 'normal' },
+        { speaker: 'phoenix', text: '（管理室の窓口……\n　エントランスとは別の場所だが\n　視線は届く距離だ）',
+          bg: 'courtroom_defense', left: 'phoenix', leftPose: 'think' },
+      ],
+      contradicts: null,
+    },
+    /* 1 */
+    {
+      text: '22時頃、正面玄関のオートロックが\n解錠される音がしました。\n私はすぐ視線を向けました。',
+      pressScene: [
+        { speaker: 'phoenix', text: '「解錠される音」——\nその音は管理室からでも聞こえるものですか？',
+          bg: 'courtroom_defense', left: 'phoenix', leftPose: 'normal' },
+        { speaker: 'dojima', text: 'ええ、管理室と玄関は近いですので。\nカードリーダーの電子音は\nよく聞こえます。',
+          bg: 'courtroom_witness', center: 'dojima', centerPose: 'normal' },
+        { speaker: 'maya', text: 'あれ……「解錠される音がした」と言ってるけど、\n解錠記録がないってことは\n音がしたのもおかしくない……？',
+          bg: 'courtroom_defense', left: 'phoenix', leftPose: 'normal', right: 'maya', rightPose: 'worried' },
+        { speaker: 'phoenix', text: '（そこだ……でもまだ早い。\n　もう少し証言を聞こう）',
+          bg: 'courtroom_defense', left: 'phoenix', leftPose: 'think' },
+      ],
+      contradicts: null,
+    },
+    /* 2 */
+    {
+      text: '入ってきたのは西村様でした。\n橋本様の義弟で、\n以前から何度もいらしていた方です。',
+      pressScene: [
+        { speaker: 'phoenix', text: '「以前から何度も」——\n西村さんが来るのはよくあることだったと？',
+          bg: 'courtroom_defense', left: 'phoenix', leftPose: 'normal' },
+        { speaker: 'dojima', text: 'ええ、月に2〜3回はいらっしゃいました。\n顔はよく存じています。',
+          bg: 'courtroom_witness', center: 'dojima', centerPose: 'normal' },
+        { speaker: 'phoenix', text: '（顔を知っているからこそ、\n　「見た」と言えば信憑性が出る……\n　だがそれは逆に言えば、\n　「いつも来る人物に成り済ませる」ということでも）',
+          bg: 'courtroom_defense', left: 'phoenix', leftPose: 'think' },
+      ],
+      contradicts: null,
+    },
+    /* 3 */
+    {
+      text: '西村様が入られた後、\n22時から23時の巡回まで\n私は管理室を離れていません。',
+      pressScene: [
+        { speaker: 'phoenix', text: 'その間、何か異常は気づきませんでしたか？',
+          bg: 'courtroom_defense', left: 'phoenix', leftPose: 'normal' },
+        { speaker: 'dojima', text: 'ございません。\n23時の巡回でも地下駐車場を含め\n確認しましたが、異常はありませんでした。',
+          bg: 'courtroom_witness', center: 'dojima', centerPose: 'normal' },
+        { speaker: 'phoenix', text: '（23時の巡回で異常なし……\n　だが橋本さんは死亡していたはず。\n　死体を見て「異常なし」は書けない——\n　つまり……！）',
+          bg: 'courtroom_defense', left: 'phoenix', leftPose: 'think' },
+        { speaker: 'maya', text: '成歩堂くん……何か気づいたの？',
+          bg: 'courtroom_defense', left: 'phoenix', leftPose: 'normal', right: 'maya', rightPose: 'worried' },
+        { speaker: 'phoenix', text: '（いや……まず最後の証言を聞こう。\n　堂島は今、何かを隠している）',
+          bg: 'courtroom_defense', left: 'phoenix', leftPose: 'think' },
+      ],
+      contradicts: null,
+    },
+    /* 4 ★ 矛盾 */
+    {
+      text: '西村様がカードで解錠されたのは\n間違いありません。\nカードリーダーの解錠ランプが点灯し、\n操作音も確認しました。',
+      pressScene: [
+        { speaker: 'phoenix', text: '「解錠ランプが点灯した」——\nそれは確かですか？',
+          bg: 'courtroom_defense', left: 'phoenix', leftPose: 'normal' },
+        { speaker: 'dojima', text: 'はい。緑色のランプが点灯して、\n電子音が鳴りました。間違いありません。',
+          bg: 'courtroom_witness', center: 'dojima', centerPose: 'normal' },
+        { speaker: 'phoenix', text: '（解錠ランプの点灯……\n　ICカードシステムで解錠された時だけ\n　ランプが光り、記録が残る。\n　記録がないのに光るはずがない！！）',
+          bg: 'courtroom_defense', left: 'phoenix', leftPose: 'think' },
+        { speaker: 'maya', text: '成歩堂くん……今がチャンスじゃない？',
+          bg: 'courtroom_defense', left: 'phoenix', leftPose: 'normal', right: 'maya', rightPose: 'excited' },
+      ],
+      contradicts: 'entrance_log',
+      wrongPenalty: '解錠ランプの点灯と記録の関係を\n証明できる証拠が必要です。\nICカードの解錠記録をもう一度確認してください。',
     },
   ],
 };
@@ -2584,7 +2921,7 @@ class AceGame {
     }
 
     if (step.type === 'crossexam_start') {
-      const ceMap = { crossexam2: CROSSEXAM2, crossexam3: CROSSEXAM3, crossexam4: CROSSEXAM4, crossexam5: CROSSEXAM5, crossexam6: CROSSEXAM6, crossexam7: CROSSEXAM7 };
+      const ceMap = { crossexam2: CROSSEXAM2, crossexam3: CROSSEXAM3, crossexam4: CROSSEXAM4, crossexam5: CROSSEXAM5, crossexam6: CROSSEXAM6, crossexam7: CROSSEXAM7, crossexam8: CROSSEXAM8 };
       this._startCrossExam(ceMap[step.ceData] || CROSSEXAM);
       return;
     }
@@ -3089,6 +3426,7 @@ class AceGame {
                        : ce === CROSSEXAM5 ? 'case4_testimony'
                        : ce === CROSSEXAM6 ? 'case5_testimony'
                        : ce === CROSSEXAM7 ? 'case6_testimony'
+                       : ce === CROSSEXAM8 ? 'case7_testimony'
                        : 'testimony_intro';
     this.sceneKey = restartScene;
     this.stepIdx  = 1;
